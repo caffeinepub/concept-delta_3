@@ -2,8 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-in-testpage-tsx-fix-the-submit-test-confirmation-dialog-modal-so-that-its-overlay-uses-a-solid-dark-background-e-g-rgba-0-0-0-0-85-or-bg-gray-900-and-the-dialog-card-itself-uses-a-solid-white-background-ffffff-with-navy-0a1f44-text-the-dialog-currently-renders-with-a-transparent-or-semi-transparent-background-causing-the-underlying-question-content-to-show-through-and-making-the-confirmation-text-submit-test-you-have-answered-x-out-of-y-questions-the-submit-now-button-and-the-continue-test-button-unreadable-remove-all-transparent-or-translucent-background-styles-from-the-confirmation-dialog-overlay-and-card",
-      "featureTitle": "In TestPage.tsx, fix the 'Submit Test?' confirmation dialog/modal so that its overlay uses a solid dark background (e.g. rgba(0,0,0,0.85) or bg-gray-900) and the dialog card itself uses a solid white background (#FFFFFF) with navy (#0A1F44) text. The dialog currently renders with a transparent or semi-transparent background, causing the underlying question content to show through and making the confirmation text ('Submit Test?', 'You have answered X out of Y questions...'), the 'Submit Now' button, and the 'Continue Test' button unreadable. Remove all transparent or translucent background styles from the confirmation dialog overlay and card.",
+      "featureId": "feature-in-testpage-tsx-pre-fetch-and-cache-all-question-images-for-the-active-test-as-soon-as-the-test-data-is-loaded-before-the-user-sees-the-first-question-use-the-browser-s-image-constructor-to-pre-load-each-question-s-image-url-in-the-background-immediately-after-the-test-and-question-list-are-fetched-this-ensures-that-when-the-user-navigates-to-any-question-including-the-first-one-displayed-on-test-start-the-image-renders-instantly-without-a-visible-loading-delay",
+      "featureTitle": "In TestPage.tsx, pre-fetch and cache all question images for the active test as soon as the test data is loaded (before the user sees the first question). Use the browser's Image constructor to pre-load each question's image URL in the background immediately after the test and question list are fetched. This ensures that when the user navigates to any question — including the first one displayed on test start — the image renders instantly without a visible loading delay.",
       "files": [
         "frontend/src/pages/TestPage.tsx"
       ],
@@ -17,7 +17,27 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-30"
+        "REQ-31"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-optimize-the-test-submission-flow-in-testpage-tsx-to-minimize-perceived-and-actual-latency-when-the-user-confirms-submission-or-the-timer-expires-immediately-transition-the-ui-to-a-submitting-loading-state-so-the-user-receives-instant-visual-feedback-the-backend-call-to-submittestresult-must-be-the-only-async-operation-blocking-the-result-screen-eliminate-any-unnecessary-sequential-awaits-redundant-refetches-or-delays-before-the-post-submission-screen-is-shown-after-the-backend-responds-navigate-to-the-result-screen-without-additional-round-trips",
+      "featureTitle": "Optimize the test submission flow in TestPage.tsx to minimize perceived and actual latency. When the user confirms submission (or the timer expires), immediately transition the UI to a 'Submitting…' loading state so the user receives instant visual feedback. The backend call to submitTestResult must be the only async operation blocking the result screen — eliminate any unnecessary sequential awaits, redundant refetches, or delays before the post-submission screen is shown. After the backend responds, navigate to the result screen without additional round-trips.",
+      "files": [
+        "frontend/src/pages/TestPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-32"
       ],
       "confidence": "high"
     }

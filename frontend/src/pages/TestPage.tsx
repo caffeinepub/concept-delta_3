@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
 import { useGetTestById, useSubmitTestResult } from '../hooks/useQueries';
 import { useTestTimer } from '../hooks/useTestTimer';
@@ -44,7 +44,7 @@ function SubmitConfirmDialog({
         padding: '1rem',
       }}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget && !isSubmitting) onClose();
       }}
     >
       <div
@@ -182,6 +182,46 @@ function TestContent() {
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  // Image pre-loading state
+  const [firstImageReady, setFirstImageReady] = useState(false);
+  const preloadedImagesRef = useRef<Set<string>>(new Set());
+
+  // Pre-load all question images as soon as test data is available
+  useEffect(() => {
+    if (!test || test.questions.length === 0) return;
+
+    let firstLoaded = false;
+
+    test.questions.forEach((question, idx) => {
+      const url = question.image.getDirectURL();
+
+      // Skip if already pre-loaded
+      if (preloadedImagesRef.current.has(url)) {
+        if (idx === 0 && !firstLoaded) {
+          firstLoaded = true;
+          setFirstImageReady(true);
+        }
+        return;
+      }
+
+      const img = new Image();
+      img.onload = () => {
+        preloadedImagesRef.current.add(url);
+        // Mark first question image as ready so the test UI renders immediately
+        if (idx === 0) {
+          setFirstImageReady(true);
+        }
+      };
+      img.onerror = () => {
+        // Even on error, unblock the UI so the test can proceed
+        if (idx === 0) {
+          setFirstImageReady(true);
+        }
+      };
+      img.src = url;
+    });
+  }, [test]);
+
   const handleAutoSubmit = useCallback(() => {
     if (!hasSubmitted) {
       handleSubmit(true);
@@ -195,6 +235,10 @@ function TestContent() {
   const handleSubmit = async (auto = false) => {
     if (!test || hasSubmitted) return;
 
+    // Immediately close dialog and set submitting state for instant feedback
+    setShowConfirm(false);
+    setHasSubmitted(true);
+
     const answerArray: Answer[] = test.questions
       .map((q, idx) => ({
         questionId: q.id,
@@ -203,13 +247,12 @@ function TestContent() {
       .filter((a) => a.selectedOption !== '');
 
     try {
-      setHasSubmitted(true);
-      setShowConfirm(false);
       await submitResult({
         testId: BigInt(testId),
         answers: answerArray,
       });
       if (auto) toast.info('Time is up! Test submitted automatically.');
+      // Navigate directly to result — no extra delays
       navigate({ to: '/test/$testId/result', params: { testId } });
     } catch (err) {
       setHasSubmitted(false);
@@ -246,6 +289,21 @@ function TestContent() {
     );
   }
 
+  // Show a brief loading screen until the first question image is ready
+  if (!firstImageReady) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-navy-800 border-t-transparent rounded-full animate-spin" />
+          <div className="text-center">
+            <p className="font-display font-semibold text-navy-800 text-base">Preparing your test...</p>
+            <p className="text-muted-foreground text-sm mt-1">Loading questions, please wait</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const currentQuestion = test.questions[currentIndex];
   const imageUrl = currentQuestion.image.getDirectURL();
   const selectedAnswer = answers[currentIndex];
@@ -262,8 +320,56 @@ function TestContent() {
         onConfirm={() => handleSubmit(false)}
         answeredCount={answeredCount}
         totalQuestions={totalQuestions}
-        isSubmitting={isSubmitting}
+        isSubmitting={isSubmitting || hasSubmitted}
       />
+
+      {/* Full-screen submitting overlay */}
+      {(isSubmitting || (hasSubmitted && !showConfirm)) && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9998,
+            backgroundColor: 'rgba(10, 31, 68, 0.92)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '1rem',
+          }}
+        >
+          <div
+            style={{
+              width: '48px',
+              height: '48px',
+              border: '4px solid rgba(255,255,255,0.3)',
+              borderTopColor: '#ffffff',
+              borderRadius: '50%',
+              animation: 'spin 0.7s linear infinite',
+            }}
+          />
+          <p
+            style={{
+              color: '#ffffff',
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 700,
+              fontSize: '1.1rem',
+            }}
+          >
+            Submitting your test...
+          </p>
+          <p
+            style={{
+              color: 'rgba(255,255,255,0.65)',
+              fontFamily: "'Inter', sans-serif",
+              fontSize: '0.875rem',
+            }}
+          >
+            Please do not close this page
+          </p>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        </div>
+      )}
 
       {/* Sticky Top Bar */}
       <div className="sticky top-0 z-40 bg-navy-800 text-white shadow-navy-lg">
@@ -293,7 +399,7 @@ function TestContent() {
             onClick={() => setShowConfirm(true)}
             className="bg-white hover:bg-white/90 text-navy-800 font-bold"
           >
-            {isSubmitting ? (
+            {isSubmitting || hasSubmitted ? (
               <span className="flex items-center gap-1.5">
                 <div className="w-3.5 h-3.5 border-2 border-navy-800 border-t-transparent rounded-full animate-spin" />
                 Submitting...
@@ -337,6 +443,7 @@ function TestContent() {
       <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4">
         <div className="w-full bg-gray-50 border border-border rounded-xl overflow-hidden mb-4">
           <img
+            key={imageUrl}
             src={imageUrl}
             alt={`Question ${currentIndex + 1}`}
             className="w-full object-contain max-h-[55vh] sm:max-h-[62vh]"

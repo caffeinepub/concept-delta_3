@@ -1,38 +1,58 @@
 {
   "kind": "build_request",
-  "title": "Fix transparent submit confirmation dialog background on Test Page",
+  "title": "Pre-load question images for instant display and speed up test submission",
+  "projectName": "Concept Delta",
   "priority": "high",
   "requirements": [
     {
-      "id": "REQ-30",
-      "text": "In TestPage.tsx, fix the 'Submit Test?' confirmation dialog/modal so that its overlay uses a solid dark background (e.g. rgba(0,0,0,0.85) or bg-gray-900) and the dialog card itself uses a solid white background (#FFFFFF) with navy (#0A1F44) text. The dialog currently renders with a transparent or semi-transparent background, causing the underlying question content to show through and making the confirmation text ('Submit Test?', 'You have answered X out of Y questions...'), the 'Submit Now' button, and the 'Continue Test' button unreadable. Remove all transparent or translucent background styles from the confirmation dialog overlay and card.",
+      "id": "REQ-31",
+      "text": "In TestPage.tsx, pre-fetch and cache all question images for the active test as soon as the test data is loaded (before the user sees the first question). Use the browser's Image constructor to pre-load each question's image URL in the background immediately after the test and question list are fetched. This ensures that when the user navigates to any question — including the first one displayed on test start — the image renders instantly without a visible loading delay.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "see screenshot clearly after sumbiting test message see like this transparent so please this message background create dark white solid"
+          "after starting test website take some time to upload question+options image please solve this issue and after starting test users seen 1st question imidiately"
         ]
       },
       "acceptanceCriteria": [
-        "The submit confirmation dialog overlay has a solid dark background (rgba(0,0,0,0.85) or equivalent) — no underlying page content is visible through the overlay.",
-        "The dialog card has a solid white (#FFFFFF) background — no transparency or translucency.",
-        "All text in the dialog ('Submit Test?', unanswered question warning) is clearly readable in navy (#0A1F44) on the white card.",
-        "The 'Submit Now' button is clearly visible with solid navy (#0A1F44) background and white text.",
-        "The 'Continue Test' button is clearly visible with appropriate solid styling.",
-        "The fix applies on both mobile and desktop viewports."
+        "All question images begin pre-loading in the background as soon as the test data (questions list) is fetched from the backend.",
+        "The first question's image is visible immediately when the test starts — no blank/loading placeholder shown to the user after clicking 'Start Test'.",
+        "Navigating between questions shows each image without noticeable delay because images are already cached in the browser.",
+        "Pre-loading does not block the rendering of the test UI or the countdown timer."
+      ]
+    },
+    {
+      "id": "REQ-32",
+      "text": "Optimize the test submission flow in TestPage.tsx to minimize perceived and actual latency. When the user confirms submission (or the timer expires), immediately transition the UI to a 'Submitting…' loading state so the user receives instant visual feedback. The backend call to submitTestResult must be the only async operation blocking the result screen — eliminate any unnecessary sequential awaits, redundant refetches, or delays before the post-submission screen is shown. After the backend responds, navigate to the result screen without additional round-trips.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "take some time to submit test please keep it fast"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Clicking 'Submit Now' (or auto-submit on timer expiry) immediately shows a visible loading/submitting state to the user.",
+        "The post-submission result screen appears as soon as the backend submitTestResult call resolves — no additional delays or secondary fetches gating the transition.",
+        "There are no redundant sequential API calls or unnecessary state resets between submission confirmation and result display.",
+        "On a normal network connection, the transition from submission confirmation to result screen completes within the single backend round-trip time."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files listed under frontend.immutablePaths.",
-    "All styling must remain consistent with the existing Navy Blue (#0A1F44) and White theme."
+    "Do not change the backend data model or any backend function signatures.",
+    "Do not modify files listed in frontend.immutablePaths.",
+    "Pre-loading must use browser-native Image pre-fetching (new Image()) — do not introduce new third-party libraries."
   ],
   "nonGoals": [
-    "Changing the submit confirmation logic or flow.",
-    "Redesigning the test page layout beyond the dialog background fix.",
-    "Modifying the backend."
+    "Adding a server-side image CDN or resizing pipeline.",
+    "Changing the question image storage format in the backend.",
+    "Modifying the scoring logic or result calculation.",
+    "Any changes to the Admin Panel upload flow."
   ],
   "imageRequirements": {
     "required": [],

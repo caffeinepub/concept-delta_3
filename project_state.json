@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 27,
+  "projectStateVersion": 29,
   "summary": "Responsive MHT-CET test series website named 'Concept Delta' with Navy Blue/White minimal theme. Includes Home Page, Dashboard, Test Page, and Admin Panel. Uses Google Login auth with user profile collection. Backend with database for users, tests, questions, and results.",
   "architectural_notes": [
     "Navy Blue primary color, White background, modern minimal UI across all pages",
@@ -13,7 +13,9 @@
     "Admin button/link not visible on home screen for admin users",
     "Onboarding form (profile setup modal) background is not solid — needs a solid dark/white background for visibility",
     "Test submission always shows score as 0 — score calculation is broken",
-    "Post-submission screen on Test Page has a transparent background — needs solid dark/white background for readability"
+    "Post-submission screen on Test Page has a transparent background — needs solid dark/white background for readability",
+    "Test Page: question+options images load slowly after test starts — needs pre-fetching/caching for instant display",
+    "Test Page: test submission is slow — needs optimization for faster response"
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -216,6 +218,22 @@
         "REQ-30"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-in-testpage-tsx-pre-fetch-and-cache-all-question-images-for-the-active-test-as-soon-as-the-test-data-is-loaded-before-the-user-sees-the-first-question-use-the-browser-s-image-constructor-to-pre-load-each-question-s-image-url-in-the-background-immediately-after-the-test-and-question-list-are-fetched-this-ensures-that-when-the-user-navigates-to-any-question-including-the-first-one-displayed-on-test-start-the-image-renders-instantly-without-a-visible-loading-delay",
+      "title": "In TestPage.tsx, pre-fetch and cache all question images for the active test as soon as the test data is loaded (before the user sees the first question). Use the browser's Image constructor to pre-load each question's image URL in the background immediately after the test and question list are fetched. This ensures that when the user navigates to any question — including the first one displayed on test start — the image renders instantly without a visible loading delay.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-optimize-the-test-submission-flow-in-testpage-tsx-to-minimize-perceived-and-actual-latency-when-the-user-confirms-submission-or-the-timer-expires-immediately-transition-the-ui-to-a-submitting-loading-state-so-the-user-receives-instant-visual-feedback-the-backend-call-to-submittestresult-must-be-the-only-async-operation-blocking-the-result-screen-eliminate-any-unnecessary-sequential-awaits-redundant-refetches-or-delays-before-the-post-submission-screen-is-shown-after-the-backend-responds-navigate-to-the-result-screen-without-additional-round-trips",
+      "title": "Optimize the test submission flow in TestPage.tsx to minimize perceived and actual latency. When the user confirms submission (or the timer expires), immediately transition the UI to a 'Submitting…' loading state so the user receives instant visual feedback. The backend call to submitTestResult must be the only async operation blocking the result screen — eliminate any unnecessary sequential awaits, redundant refetches, or delays before the post-submission screen is shown. After the backend responds, navigate to the result screen without additional round-trips.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -322,6 +340,12 @@
     {
       "id": "AR-21",
       "summary": "Fix post-submission screen background on Test Page: make the background solid dark/white (not transparent) so the score and message are clearly visible",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Performance: Pre-load/cache question images so they display immediately when test starts; also speed up test submission to reduce wait time for users",
       "reqIds": [],
       "status": "pending"
     }
