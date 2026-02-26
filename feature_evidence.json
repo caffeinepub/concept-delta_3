@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-in-testpage-tsx-pre-fetch-and-cache-all-question-images-for-the-active-test-as-soon-as-the-test-data-is-loaded-before-the-user-sees-the-first-question-use-the-browser-s-image-constructor-to-pre-load-each-question-s-image-url-in-the-background-immediately-after-the-test-and-question-list-are-fetched-this-ensures-that-when-the-user-navigates-to-any-question-including-the-first-one-displayed-on-test-start-the-image-renders-instantly-without-a-visible-loading-delay",
-      "featureTitle": "In TestPage.tsx, pre-fetch and cache all question images for the active test as soon as the test data is loaded (before the user sees the first question). Use the browser's Image constructor to pre-load each question's image URL in the background immediately after the test and question list are fetched. This ensures that when the user navigates to any question — including the first one displayed on test start — the image renders instantly without a visible loading delay.",
+      "featureId": "feature-completely-rewrite-the-admin-link-visibility-logic-in-navbar-tsx-remove-all-existing-useiscalleradmin-usegetcallerrole-or-any-route-gated-admin-check-hooks-replace-with-a-single-unconditional-call-to-usegetcalleruserprofile-that-is-enabled-whenever-the-user-is-authenticated-isauthenticated-true-with-no-route-condition-or-path-guard-whatsoever-unwrap-the-option-returned-by-the-backend-motoko-option-maps-to-a-js-array-read-index-0-to-get-the-profile-object-then-read-profile-isadmin-derive-showadmin-unwrappedprofile-isadmin-true-render-the-admin-navigation-link-in-both-the-desktop-nav-and-the-mobile-hamburger-menu-as-soon-as-showadmin-is-true-on-every-route-including-never-hide-or-reset-the-admin-link-based-on-the-current-route-the-admin-link-must-remain-hidden-for-unauthenticated-users-and-authenticated-non-admin-users-maintain-the-existing-navy-blue-0a1f44-and-white-theme-styling-throughout",
+      "featureTitle": "Completely rewrite the Admin link visibility logic in Navbar.tsx. Remove all existing useIsCallerAdmin, useGetCallerRole, or any route-gated admin check hooks. Replace with a single unconditional call to useGetCallerUserProfile that is enabled whenever the user is authenticated (isAuthenticated === true), with no route condition or path guard whatsoever. Unwrap the Option returned by the backend (Motoko Option maps to a JS array — read index [0] to get the profile object, then read profile.isAdmin). Derive showAdmin = unwrappedProfile?.isAdmin === true. Render the 'Admin' navigation link in both the desktop nav and the mobile hamburger menu as soon as showAdmin is true, on every route including '/'. Never hide or reset the Admin link based on the current route. The Admin link must remain hidden for unauthenticated users and authenticated non-admin users. Maintain the existing Navy Blue (#0A1F44) and White theme styling throughout.",
       "files": [
-        "frontend/src/pages/TestPage.tsx"
+        "frontend/src/components/Navbar.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -17,27 +17,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-31"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-optimize-the-test-submission-flow-in-testpage-tsx-to-minimize-perceived-and-actual-latency-when-the-user-confirms-submission-or-the-timer-expires-immediately-transition-the-ui-to-a-submitting-loading-state-so-the-user-receives-instant-visual-feedback-the-backend-call-to-submittestresult-must-be-the-only-async-operation-blocking-the-result-screen-eliminate-any-unnecessary-sequential-awaits-redundant-refetches-or-delays-before-the-post-submission-screen-is-shown-after-the-backend-responds-navigate-to-the-result-screen-without-additional-round-trips",
-      "featureTitle": "Optimize the test submission flow in TestPage.tsx to minimize perceived and actual latency. When the user confirms submission (or the timer expires), immediately transition the UI to a 'Submitting…' loading state so the user receives instant visual feedback. The backend call to submitTestResult must be the only async operation blocking the result screen — eliminate any unnecessary sequential awaits, redundant refetches, or delays before the post-submission screen is shown. After the backend responds, navigate to the result screen without additional round-trips.",
-      "files": [
-        "frontend/src/pages/TestPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-32"
+        "REQ-37"
       ],
       "confidence": "high"
     }

@@ -1,35 +1,24 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-26T14:57:32.398Z",
+  "generatedAt": "2026-02-26T15:46:08.304Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-31",
-        "summary": "In TestPage.tsx, pre-fetch and cache all question images for the active test as soon as the test data is loaded (before the user sees the first question). Use the browser's Image constructor to pre-load each question's image URL in the background immediately after the test and question list are fetched. This ensures that when the user navigates to any question — including the first one displayed on test start — the image renders instantly without a visible loading delay.",
+        "id": "REQ-37",
+        "summary": "Completely rewrite the Admin link visibility logic in Navbar.tsx. Remove all existing useIsCallerAdmin, useGetCallerRole, or any route-gated admin check hooks. Replace with a single unconditional call to useGetCallerUserProfile that is enabled whenever the user is authenticated (isAuthenticated === true), with no route condition or path guard whatsoever. Unwrap the Option returned by the backend (Motoko Option maps to a JS array — read index [0] to get the profile object, then read profile.isAdmin). Derive showAdmin = unwrappedProfile?.isAdmin === true. Render the 'Admin' navigation link in both the desktop nav and the mobile hamburger menu as soon as showAdmin is true, on every route including '/'. Never hide or reset the Admin link based on the current route. The Admin link must remain hidden for unauthenticated users and authenticated non-admin users. Maintain the existing Navy Blue (#0A1F44) and White theme styling throughout.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/TestPage.tsx"
+          "frontend/src/components/Navbar.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/TestPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-32",
-        "summary": "Optimize the test submission flow in TestPage.tsx to minimize perceived and actual latency. When the user confirms submission (or the timer expires), immediately transition the UI to a 'Submitting…' loading state so the user receives instant visual feedback. The backend call to submitTestResult must be the only async operation blocking the result screen — eliminate any unnecessary sequential awaits, redundant refetches, or delays before the post-submission screen is shown. After the backend responds, navigate to the result screen without additional round-trips.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/TestPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/TestPage.tsx"
+          "frontend/src/components/Navbar.tsx"
         ]
       }
     ]
@@ -39,7 +28,8 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/pages/TestPage.tsx",
+    "frontend/src/components/Navbar.tsx",
+    "frontend/src/hooks/useQueries.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

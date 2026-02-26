@@ -1,39 +1,27 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Pre-load question images for instant display and speed up test submission",
+  "title": "Fix Admin link not visible in Navbar for admin users",
   "requirements": [
     {
-      "id": "REQ-31",
-      "summary": "Pre-fetch and cache all question images in TestPage.tsx immediately after test data loads to ensure instant image display throughout the test, including the first question",
+      "id": "REQ-37",
+      "summary": "Rewrite Admin link visibility logic in Navbar.tsx to use unconditional useGetCallerUserProfile when authenticated, unwrap the Option profile correctly, derive showAdmin from profile.isAdmin, and render the Admin link in both desktop and mobile menus on all routes without any route-based guards",
       "acceptanceCriteria": [
-        "All question images begin pre-loading in the background as soon as the test data (questions list) is fetched from the backend.",
-        "The first question's image is visible immediately when the test starts — no blank/loading placeholder shown to the user after clicking 'Start Test'.",
-        "Navigating between questions shows each image without noticeable delay because images are already cached in the browser.",
-        "Pre-loading does not block the rendering of the test UI or the countdown timer."
+        "An authenticated user with isAdmin = true sees the 'Admin' navigation link in the desktop navbar on the Home page ('/' route)",
+        "An authenticated user with isAdmin = true sees the 'Admin' navigation link in the desktop navbar on the Dashboard page ('/dashboard' route)",
+        "An authenticated user with isAdmin = true sees the 'Admin' link in the mobile hamburger menu on all routes including '/'",
+        "The Admin link does not appear for unauthenticated users on any route",
+        "The Admin link does not appear for authenticated users where isAdmin is false or undefined",
+        "The useGetCallerUserProfile query runs unconditionally on every route whenever isAuthenticated is true — it is not gated behind a route check",
+        "The profile Option returned by the backend is correctly unwrapped (array index [0]) before reading isAdmin",
+        "showAdmin is never reset or overridden based on the current route path",
+        "All existing navbar styling (Navy Blue #0A1F44 background, white text, hover highlight) is preserved"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/TestPage.tsx",
+          "path": "frontend/src/components/Navbar.tsx",
           "operation": "modify",
-          "description": "Add image pre-loading logic using the browser's Image constructor. After fetching test data with useGetTestById, iterate through all questions and pre-load each question's image by calling getDirectURL() on the ExternalBlob and creating a new Image() object for each URL. This pre-loading should happen in a useEffect that runs once when testData becomes available, ensuring images are cached before the user sees the first question. Verify the blob-storage component's usage instructions for ExternalBlob.getDirectURL() before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-32",
-      "summary": "Optimize test submission flow in TestPage.tsx to provide instant visual feedback and minimize latency by showing a loading state immediately and eliminating unnecessary delays before displaying results",
-      "acceptanceCriteria": [
-        "Clicking 'Submit Now' (or auto-submit on timer expiry) immediately shows a visible loading/submitting state to the user.",
-        "The post-submission result screen appears as soon as the backend submitTestResult call resolves — no additional delays or secondary fetches gating the transition.",
-        "There are no redundant sequential API calls or unnecessary state resets between submission confirmation and result display.",
-        "On a normal network connection, the transition from submission confirmation to result screen completes within the single backend round-trip time."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/TestPage.tsx",
-          "operation": "modify",
-          "description": "Refactor the handleSubmit function to immediately set a visible 'submitting' loading state when the user confirms submission or the timer expires. Remove any redundant sequential awaits or unnecessary refetches between the submitTestResult mutation call and navigation to the result page. Ensure that after the mutation resolves successfully, the code navigates directly to the result screen without additional round-trips. Leverage the existing submitTestResultMutation.isPending state or introduce a local submitting state to display a loading indicator (spinner or 'Submitting...' text) to the user during the submission process."
+          "description": "Completely rewrite the Admin link visibility logic: Remove all existing useIsCallerAdmin, useGetCallerRole, or any route-gated admin check hooks. Replace with a single unconditional call to useGetCallerUserProfile that is enabled whenever isAuthenticated === true, with no route condition or path guard whatsoever. Unwrap the Option returned by the backend (the query returns UserProfile | null in TypeScript, which maps from Motoko's Option — if the result is non-null, read profile.isAdmin directly). Derive showAdmin = userProfile?.isAdmin === true. Render the 'Admin' navigation link in both the desktop nav (<Link to='/admin'>) and the mobile hamburger menu as soon as showAdmin is true, on every route including '/'. Never hide or reset the Admin link based on the current route. The Admin link must remain hidden for unauthenticated users and authenticated non-admin users. Maintain the existing Navy Blue (#0A1F44) and White theme styling throughout. Ensure the profile query is not gated by any route checks — it must run on all routes when the user is authenticated."
         }
       ]
     }

@@ -8,13 +8,26 @@ import { Menu, X, LogIn, LogOut } from 'lucide-react';
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, clear, loginStatus, identity } = useInternetIdentity();
+  const { login, clear, loginStatus, identity, isInitializing } = useInternetIdentity();
   const queryClient = useQueryClient();
-  const { data: isAdmin } = useIsCallerAdmin();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isAuthenticated = !!identity;
   const isLoggingIn = loginStatus === 'logging-in';
+
+  // useIsCallerAdmin: isLoading is true while actor/identity initializing OR query is fetching.
+  // Once resolved, isLoading is false and data holds the boolean result.
+  const { data: isAdmin, isLoading: adminLoading } = useIsCallerAdmin();
+
+  // Show admin link only when:
+  // - user is authenticated and identity is fully initialized
+  // - admin check has completed (not loading)
+  // - isAdmin is explicitly true
+  const showAdmin =
+    isAuthenticated &&
+    !isInitializing &&
+    !adminLoading &&
+    isAdmin === true;
 
   const handleAuth = async () => {
     if (isAuthenticated) {
@@ -37,7 +50,7 @@ export default function Navbar() {
   const navLinks = [
     { label: 'Home', path: '/', show: isAuthenticated },
     { label: 'Dashboard', path: '/dashboard', show: isAuthenticated },
-    { label: 'Admin', path: '/admin', show: isAuthenticated && !!isAdmin },
+    { label: 'Admin', path: '/admin', show: showAdmin },
   ];
 
   const isActive = (path: string) => location.pathname === path;

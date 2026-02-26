@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
+import { useInternetIdentity } from './useInternetIdentity';
 import type { UserProfile, CompleteTest, Question, TestResult, Answer } from '../backend';
-import { ExternalBlob } from '../backend';
+import { ExternalBlob, UserRole } from '../backend';
 
 // ─── User Profile ──────────────────────────────────────────────────────────
 
@@ -36,6 +37,7 @@ export function useSaveCallerUserProfile() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['callerRole'] });
     },
   });
 }
@@ -243,30 +245,64 @@ export function useGetAllUsers() {
   });
 }
 
+// ─── Caller Role ───────────────────────────────────────────────────────────
+
 export function useGetCallerRole() {
   const { actor, isFetching: actorFetching } = useActor();
+  const { identity, isInitializing } = useInternetIdentity();
+  const isAuthenticated = !!identity;
+  const principalStr = identity?.getPrincipal().toString() ?? 'anonymous';
 
-  return useQuery({
-    queryKey: ['callerRole'],
+  const isReady = !!actor && !actorFetching && isAuthenticated && !isInitializing;
+
+  const query = useQuery<UserRole>({
+    queryKey: ['callerRole', principalStr],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
       return actor.getCallerUserRole();
     },
-    enabled: !!actor && !actorFetching,
+    enabled: isReady,
+    retry: false,
+    staleTime: 0,
   });
+
+  return {
+    ...query,
+    isPending: !isReady || query.isPending,
+    isFetched: isReady && query.isFetched,
+  };
 }
 
 export function useIsCallerAdmin() {
   const { actor, isFetching: actorFetching } = useActor();
+  const { identity, isInitializing } = useInternetIdentity();
+  const isAuthenticated = !!identity;
+  const principalStr = identity?.getPrincipal().toString() ?? 'anonymous';
 
-  return useQuery<boolean>({
-    queryKey: ['isCallerAdmin'],
+  const isReady = !!actor && !actorFetching && isAuthenticated && !isInitializing;
+
+  const query = useQuery<boolean>({
+    // Include the principal in the key so the query re-runs when the user logs in/out
+    queryKey: ['isCallerAdmin', principalStr],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
       return actor.isCallerAdmin();
     },
-    enabled: !!actor && !actorFetching,
+    // Only run when actor is ready AND user is authenticated (not anonymous)
+    enabled: isReady,
+    // Don't retry on error (e.g. unauthorized trap from backend)
+    retry: false,
+    staleTime: 0,
   });
+
+  return {
+    ...query,
+    // isLoading should be true while actor/identity are still initializing OR query is actively fetching
+    // Use query.isLoading (isPending && isFetching) instead of query.isPending to avoid
+    // staying in loading state when the query is disabled (isPending is true for disabled queries too)
+    isLoading: !isReady || query.isLoading,
+    data: query.data,
+  };
 }
 
 export function useMarkAdminVisited() {
@@ -286,13 +322,15 @@ export function useMarkAdminVisited() {
 
 export function useHasAdminBeenVisited() {
   const { actor, isFetching: actorFetching } = useActor();
+  const { identity, isInitializing } = useInternetIdentity();
+  const isAuthenticated = !!identity;
 
   return useQuery<boolean>({
-    queryKey: ['hasAdminBeenVisited'],
+    queryKey: ['hasAdminBeenVisited', identity?.getPrincipal().toString() ?? 'anonymous'],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
       return actor.hasAdminBeenVisited();
     },
-    enabled: !!actor && !actorFetching,
+    enabled: !!actor && !actorFetching && isAuthenticated && !isInitializing,
   });
 }

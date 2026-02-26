@@ -1,58 +1,43 @@
 {
   "kind": "build_request",
-  "title": "Pre-load question images for instant display and speed up test submission",
+  "title": "Fix Admin link not visible in Navbar for admin users",
   "projectName": "Concept Delta",
   "priority": "high",
   "requirements": [
     {
-      "id": "REQ-31",
-      "text": "In TestPage.tsx, pre-fetch and cache all question images for the active test as soon as the test data is loaded (before the user sees the first question). Use the browser's Image constructor to pre-load each question's image URL in the background immediately after the test and question list are fetched. This ensures that when the user navigates to any question — including the first one displayed on test start — the image renders instantly without a visible loading delay.",
+      "id": "REQ-37",
+      "text": "Completely rewrite the Admin link visibility logic in Navbar.tsx. Remove all existing useIsCallerAdmin, useGetCallerRole, or any route-gated admin check hooks. Replace with a single unconditional call to useGetCallerUserProfile that is enabled whenever the user is authenticated (isAuthenticated === true), with no route condition or path guard whatsoever. Unwrap the Option returned by the backend (Motoko Option maps to a JS array — read index [0] to get the profile object, then read profile.isAdmin). Derive showAdmin = unwrappedProfile?.isAdmin === true. Render the 'Admin' navigation link in both the desktop nav and the mobile hamburger menu as soon as showAdmin is true, on every route including '/'. Never hide or reset the Admin link based on the current route. The Admin link must remain hidden for unauthenticated users and authenticated non-admin users. Maintain the existing Navy Blue (#0A1F44) and White theme styling throughout.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-latest"
         ],
         "quotes": [
-          "after starting test website take some time to upload question+options image please solve this issue and after starting test users seen 1st question imidiately"
+          "admin button not visible in the navbar"
         ]
       },
       "acceptanceCriteria": [
-        "All question images begin pre-loading in the background as soon as the test data (questions list) is fetched from the backend.",
-        "The first question's image is visible immediately when the test starts — no blank/loading placeholder shown to the user after clicking 'Start Test'.",
-        "Navigating between questions shows each image without noticeable delay because images are already cached in the browser.",
-        "Pre-loading does not block the rendering of the test UI or the countdown timer."
-      ]
-    },
-    {
-      "id": "REQ-32",
-      "text": "Optimize the test submission flow in TestPage.tsx to minimize perceived and actual latency. When the user confirms submission (or the timer expires), immediately transition the UI to a 'Submitting…' loading state so the user receives instant visual feedback. The backend call to submitTestResult must be the only async operation blocking the result screen — eliminate any unnecessary sequential awaits, redundant refetches, or delays before the post-submission screen is shown. After the backend responds, navigate to the result screen without additional round-trips.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "take some time to submit test please keep it fast"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Clicking 'Submit Now' (or auto-submit on timer expiry) immediately shows a visible loading/submitting state to the user.",
-        "The post-submission result screen appears as soon as the backend submitTestResult call resolves — no additional delays or secondary fetches gating the transition.",
-        "There are no redundant sequential API calls or unnecessary state resets between submission confirmation and result display.",
-        "On a normal network connection, the transition from submission confirmation to result screen completes within the single backend round-trip time."
+        "An authenticated user with isAdmin = true sees the 'Admin' navigation link in the desktop navbar on the Home page ('/' route)",
+        "An authenticated user with isAdmin = true sees the 'Admin' navigation link in the desktop navbar on the Dashboard page ('/dashboard' route)",
+        "An authenticated user with isAdmin = true sees the 'Admin' link in the mobile hamburger menu on all routes including '/'",
+        "The Admin link does not appear for unauthenticated users on any route",
+        "The Admin link does not appear for authenticated users where isAdmin is false or undefined",
+        "The useGetCallerUserProfile query runs unconditionally on every route whenever isAuthenticated is true — it is not gated behind a route check",
+        "The profile Option returned by the backend is correctly unwrapped (array index [0]) before reading isAdmin",
+        "showAdmin is never reset or overridden based on the current route path",
+        "All existing navbar styling (Navy Blue #0A1F44 background, white text, hover highlight) is preserved"
       ]
     }
   ],
   "constraints": [
-    "Do not change the backend data model or any backend function signatures.",
-    "Do not modify files listed in frontend.immutablePaths.",
-    "Pre-loading must use browser-native Image pre-fetching (new Image()) — do not introduce new third-party libraries."
+    "Do not modify any file listed in frontend.immutablePaths",
+    "Do not introduce any route-specific condition that gates the profile query or the Admin link on the current URL path",
+    "The fix must not affect the visibility rules for non-admin users — Admin link must remain hidden from them"
   ],
   "nonGoals": [
-    "Adding a server-side image CDN or resizing pipeline.",
-    "Changing the question image storage format in the backend.",
-    "Modifying the scoring logic or result calculation.",
-    "Any changes to the Admin Panel upload flow."
+    "Changes to backend admin logic or data models",
+    "Changes to AdminRoute.tsx or ProtectedRoute.tsx guard logic",
+    "Changes to any other navbar styling or layout beyond the Admin link visibility fix"
   ],
   "imageRequirements": {
     "required": [],
