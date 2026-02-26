@@ -1,34 +1,25 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Admin Panel: First-Login-Only Access Gate",
+  "title": "Update Navbar to show Home, Dashboard, and Admin (admin-only) nav links",
   "requirements": [
     {
-      "id": "REQ-17",
-      "summary": "Implement first-visit-only access to the Admin Panel with automatic redirection after initial visit",
+      "id": "REQ-18",
+      "summary": "Update Navbar.tsx to display 'Home', 'Dashboard', and 'Admin' (admin-only) navigation links for authenticated users, respecting the Navy Blue (#0A1F44) and White theme",
       "acceptanceCriteria": [
-        "On first login/first visit to `/admin`, the admin page renders normally and `markAdminVisited()` is called.",
-        "On all subsequent visits to `/admin` (i.e., `hasAdminBeenVisited()` returns true), the user is redirected to `/dashboard`.",
-        "A clear message (toast or inline notice) informs the admin that the panel is only accessible on first login.",
-        "Non-admin users are still redirected away from `/admin` as before.",
-        "Unauthenticated users are still redirected to `/` as before.",
-        "The AdminRoute.tsx guard component is updated (or a wrapper is added) to implement this first-visit check without modifying immutable paths."
+        "When a non-authenticated user visits any page, the navbar shows no navigation links (Home, Dashboard, Admin).",
+        "When an authenticated non-admin user is logged in, the navbar shows 'Home' and 'Dashboard' links only; the 'Admin' link is not rendered.",
+        "When an authenticated admin user (isAdmin = true) is logged in, the navbar shows 'Home', 'Dashboard', and 'Admin' links.",
+        "'Home' navigates to '/', 'Dashboard' navigates to '/dashboard', and 'Admin' navigates to '/admin'.",
+        "All nav links use white text on the #0A1F44 navbar background, consistent with the existing Navy Blue/White theme.",
+        "The mobile hamburger menu also respects the same visibility rules for each nav link.",
+        "No other navbar behaviour (logo, login/logout button, sticky positioning) is changed."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/AdminRoute.tsx",
+          "path": "frontend/src/components/Navbar.tsx",
           "operation": "modify",
-          "description": "Add first-visit check to the admin route guard. After verifying admin status, check if `hasAdminBeenVisited()` returns true. If true, redirect to `/dashboard` and show a toast message explaining the admin panel is only accessible on first login. If false (first visit), allow access and proceed to render children normally. Maintain existing authentication and admin role checks."
-        },
-        {
-          "path": "frontend/src/pages/AdminPage.tsx",
-          "operation": "modify",
-          "description": "Add an effect hook that calls `markAdminVisited()` when the AdminPage successfully mounts for an admin user who has not yet visited. Use the actor from useActor hook and call the backend method to mark the visit. Ensure this only fires once on the initial render. Add error handling for the backend call."
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add two new query/mutation hooks: `useHasAdminBeenVisited()` to fetch the current visited status from the backend via `hasAdminBeenVisited()`, and `useMarkAdminVisited()` as a mutation hook to call `markAdminVisited()` on the backend. Both hooks should depend on the actor being available and handle loading/error states appropriately."
+          "description": "Add conditional navigation links for 'Home', 'Dashboard', and 'Admin'. The 'Home' link navigates to '/', 'Dashboard' to '/dashboard', and 'Admin' to '/admin'. All links must only appear when the user is authenticated. The 'Admin' link must be conditionally rendered based on the user's admin status (isAdmin = true) fetched from the backend. Use the authorization component's isCallerAdmin backend method or derive admin status from the user profile context. Ensure both desktop and mobile menu (hamburger menu) implement the same visibility rules. Style all links with white text on the #0A1F44 navy background, with hover states consistent with the existing navbar style. Do not modify the logo, login/logout button, or sticky positioning."
         }
       ]
     }

@@ -2,12 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-admin-panel-access-flow-in-the-frontend-so-that-the-admin-route-and-the-adminpage-are-only-accessible-on-the-user-s-first-visit-to-the-admin-panel-after-the-admin-successfully-loads-the-admin-page-for-the-first-time-call-markadminvisited-on-the-backend-on-any-subsequent-navigation-to-admin-if-hasadminbeenvisited-returns-true-redirect-the-user-to-the-dashboard-dashboard-with-a-toast-or-inline-message-explaining-that-the-admin-panel-is-only-accessible-on-first-login",
-      "featureTitle": "Update the Admin Panel access flow in the frontend so that the `/admin` route and the AdminPage are only accessible on the user's **first** visit to the admin panel. After the admin successfully loads the admin page for the first time, call `markAdminVisited()` on the backend. On any subsequent navigation to `/admin`, if `hasAdminBeenVisited()` returns `true`, redirect the user to the dashboard (`/dashboard`) with a toast or inline message explaining that the admin panel is only accessible on first login.",
+      "featureId": "feature-update-navbar-tsx-so-that-when-a-user-is-authenticated-the-navbar-displays-navigation-links-for-home-dashboard-and-visible-only-to-users-with-isadmin-true-admin-the-admin-link-must-be-hidden-from-non-admin-authenticated-users-and-from-unauthenticated-visitors-all-links-must-follow-the-existing-navy-blue-0a1f44-and-white-theme-white-text-on-the-navy-background-with-a-hover-active-highlight-consistent-with-the-current-navbar-style",
+      "featureTitle": "Update Navbar.tsx so that when a user is authenticated, the navbar displays navigation links for 'Home', 'Dashboard', and — visible only to users with isAdmin = true — 'Admin'. The 'Admin' link must be hidden from non-admin authenticated users and from unauthenticated visitors. All links must follow the existing Navy Blue (#0A1F44) and White theme: white text on the navy background, with a hover/active highlight consistent with the current navbar style.",
       "files": [
-        "frontend/src/components/AdminRoute.tsx",
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/AdminPage.tsx"
+        "frontend/src/components/Navbar.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -19,7 +17,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-17"
+        "REQ-18"
       ],
       "confidence": "high"
     }

@@ -34,7 +34,7 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { label: 'Home', path: '/', show: true },
+    { label: 'Home', path: '/', show: isAuthenticated },
     { label: 'Dashboard', path: '/dashboard', show: isAuthenticated },
     { label: 'Admin', path: '/admin', show: isAuthenticated && !!isAdmin },
   ];

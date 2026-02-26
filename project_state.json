@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 11,
+  "projectStateVersion": 13,
   "summary": "Responsive MHT-CET test series website named 'Concept Delta' with Navy Blue/White minimal theme. Includes Home Page, Dashboard, Test Page, and Admin Panel. Uses Google Login auth with user profile collection. Backend with database for users, tests, questions, and results.",
   "architectural_notes": [
     "Navy Blue primary color, White background, modern minimal UI across all pages",
@@ -123,6 +123,14 @@
         "REQ-17"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-update-navbar-tsx-so-that-when-a-user-is-authenticated-the-navbar-displays-navigation-links-for-home-dashboard-and-visible-only-to-users-with-isadmin-true-admin-the-admin-link-must-be-hidden-from-non-admin-authenticated-users-and-from-unauthenticated-visitors-all-links-must-follow-the-existing-navy-blue-0a1f44-and-white-theme-white-text-on-the-navy-background-with-a-hover-active-highlight-consistent-with-the-current-navbar-style",
+      "title": "Update Navbar.tsx so that when a user is authenticated, the navbar displays navigation links for 'Home', 'Dashboard', and — visible only to users with isAdmin = true — 'Admin'. The 'Admin' link must be hidden from non-admin authenticated users and from unauthenticated visitors. All links must follow the existing Navy Blue (#0A1F44) and White theme: white text on the navy background, with a hover/active highlight consistent with the current navbar style.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -184,6 +192,12 @@
       "reqIds": [
         "REQ-16"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Navbar: show Home, Dashboard, and Admin (admin-only) navigation buttons/links for logged-in users; Admin link visible only to admin users",
+      "reqIds": [],
       "status": "pending"
     }
   ],
