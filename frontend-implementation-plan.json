@@ -1,25 +1,54 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Update Navbar to show Home, Dashboard, and Admin (admin-only) nav links",
+  "title": "Replace Google Login with Internet Identity authentication",
   "requirements": [
     {
-      "id": "REQ-18",
-      "summary": "Update Navbar.tsx to display 'Home', 'Dashboard', and 'Admin' (admin-only) navigation links for authenticated users, respecting the Navy Blue (#0A1F44) and White theme",
+      "id": "REQ-23",
+      "summary": "Remove all Google Login references and replace with Internet Identity authentication",
       "acceptanceCriteria": [
-        "When a non-authenticated user visits any page, the navbar shows no navigation links (Home, Dashboard, Admin).",
-        "When an authenticated non-admin user is logged in, the navbar shows 'Home' and 'Dashboard' links only; the 'Admin' link is not rendered.",
-        "When an authenticated admin user (isAdmin = true) is logged in, the navbar shows 'Home', 'Dashboard', and 'Admin' links.",
-        "'Home' navigates to '/', 'Dashboard' navigates to '/dashboard', and 'Admin' navigates to '/admin'.",
-        "All nav links use white text on the #0A1F44 navbar background, consistent with the existing Navy Blue/White theme.",
-        "The mobile hamburger menu also respects the same visibility rules for each nav link.",
-        "No other navbar behaviour (logo, login/logout button, sticky positioning) is changed."
+        "No Google Login button or OAuth flow exists anywhere in the app",
+        "The navbar Login button triggers Internet Identity authentication",
+        "All UI copy referring to Google Login is removed or replaced with 'Login with Internet Identity'"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/Navbar.tsx",
           "operation": "modify",
-          "description": "Add conditional navigation links for 'Home', 'Dashboard', and 'Admin'. The 'Home' link navigates to '/', 'Dashboard' to '/dashboard', and 'Admin' to '/admin'. All links must only appear when the user is authenticated. The 'Admin' link must be conditionally rendered based on the user's admin status (isAdmin = true) fetched from the backend. Use the authorization component's isCallerAdmin backend method or derive admin status from the user profile context. Ensure both desktop and mobile menu (hamburger menu) implement the same visibility rules. Style all links with white text on the #0A1F44 navy background, with hover states consistent with the existing navbar style. Do not modify the logo, login/logout button, or sticky positioning."
+          "description": "Remove any Google Login button or references. Ensure the existing Login button uses the useInternetIdentity hook for authentication. The button should display 'Login with Internet Identity' or similar copy, and trigger login() when clicked. Verify the logout flow clears the query cache. Review the file to identify and remove any Google OAuth configuration or UI elements."
+        },
+        {
+          "path": "frontend/src/pages/HomePage.tsx",
+          "operation": "modify",
+          "description": "Search for and remove any mentions of 'Google Login', 'Google', or 'OAuth' in UI copy, CTAs, or feature descriptions. Replace with 'Internet Identity' or remove entirely if not essential. Ensure all authentication references point to Internet Identity."
+        }
+      ]
+    },
+    {
+      "id": "REQ-24",
+      "summary": "Wire ProfileSetupModal to Internet Identity first-login flow and ensure backend profile persistence",
+      "acceptanceCriteria": [
+        "After first Internet Identity login, the profile setup modal is shown automatically",
+        "The modal collects Full Name, Class (11th/12th/Dropper), and Contact Number",
+        "Submitting the form calls the backend and persists the user profile",
+        "After successful profile save, the user is redirected to /dashboard",
+        "Returning users (profile already exists) are not shown the modal again"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ProfileSetupModal.tsx",
+          "operation": "modify",
+          "description": "Verify that the modal is correctly wired to the Internet Identity auth state from useInternetIdentity and that it calls saveCallerUserProfile (or registerUser) mutation on form submission. Ensure it redirects to /dashboard after successful profile save. Fix any broken integration with the auth state or backend call. The modal should only appear when isAuthenticated is true, the user profile has been fetched, and userProfile is null (first-time user)."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Ensure ProfileSetupModal is rendered in the root layout and receives the correct props to determine visibility. It should show when: user is authenticated via Internet Identity, the profile query has completed (isFetched), and getCallerUserProfile returns null. Verify the modal does not flash on page load by properly checking both actorFetching and query states. Fix any issues with modal trigger logic or state dependency."
+        },
+        {
+          "path": "frontend/src/hooks/useGetCallerUserProfile.ts",
+          "operation": "modify",
+          "description": "Verify the hook properly exposes isFetched state alongside isLoading to prevent profile setup modal flashing. Ensure isLoading reflects both actorFetching and query.isLoading, and that isFetched is only true when actor is ready and query.isFetched is true. This prevents the modal from appearing before the profile check completes."
         }
       ]
     }

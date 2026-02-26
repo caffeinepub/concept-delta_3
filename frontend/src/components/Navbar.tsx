@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from '@tanstack/react-router';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useQueryClient } from '@tanstack/react-query';
 import { useIsCallerAdmin } from '../hooks/useQueries';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogIn, LogOut } from 'lucide-react';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -24,8 +24,9 @@ export default function Navbar() {
     } else {
       try {
         await login();
-      } catch (error: any) {
-        if (error.message === 'User is already authenticated') {
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : '';
+        if (message === 'User is already authenticated') {
           await clear();
           setTimeout(() => login(), 300);
         }
@@ -41,6 +42,12 @@ export default function Navbar() {
 
   const isActive = (path: string) => location.pathname === path;
 
+  const authButtonLabel = isLoggingIn
+    ? 'Logging in...'
+    : isAuthenticated
+    ? 'Logout'
+    : 'Login';
+
   return (
     <nav className="sticky top-0 z-50 bg-[#0A1F44] shadow-navy-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -55,14 +62,14 @@ export default function Navbar() {
               alt="Concept Delta logo"
               className="w-8 h-8 object-contain opacity-90 group-hover:opacity-100 transition-opacity"
             />
-            <span className="text-white font-heading font-bold text-lg tracking-tight">
+            <span className="text-white font-bold text-lg tracking-tight">
               Concept Delta
             </span>
           </button>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.filter(l => l.show).map(link => (
+            {navLinks.filter((l) => l.show).map((link) => (
               <button
                 key={link.path}
                 onClick={() => navigate({ to: link.path })}
@@ -82,9 +89,14 @@ export default function Navbar() {
             <button
               onClick={handleAuth}
               disabled={isLoggingIn}
-              className="hidden md:inline-flex items-center px-4 py-2 rounded border border-white text-white text-sm font-medium hover:bg-white hover:text-[#0A1F44] transition-colors disabled:opacity-50"
+              className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded border border-white text-white text-sm font-medium hover:bg-white hover:text-[#0A1F44] transition-colors disabled:opacity-50"
             >
-              {isLoggingIn ? 'Logging in...' : isAuthenticated ? 'Logout' : 'Login'}
+              {isAuthenticated ? (
+                <LogOut className="w-4 h-4" />
+              ) : (
+                <LogIn className="w-4 h-4" />
+              )}
+              {authButtonLabel}
             </button>
 
             <button
@@ -92,7 +104,11 @@ export default function Navbar() {
               className="md:hidden text-white p-1"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -101,10 +117,13 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#0A1F44] border-t border-white/10 px-4 py-3 space-y-1">
-          {navLinks.filter(l => l.show).map(link => (
+          {navLinks.filter((l) => l.show).map((link) => (
             <button
               key={link.path}
-              onClick={() => { navigate({ to: link.path }); setMobileMenuOpen(false); }}
+              onClick={() => {
+                navigate({ to: link.path });
+                setMobileMenuOpen(false);
+              }}
               className={`block w-full text-left px-4 py-2 rounded text-sm font-medium transition-colors ${
                 isActive(link.path)
                   ? 'bg-white/20 text-white'
@@ -116,11 +135,19 @@ export default function Navbar() {
           ))}
           <div className="pt-2 border-t border-white/10">
             <button
-              onClick={() => { handleAuth(); setMobileMenuOpen(false); }}
+              onClick={() => {
+                handleAuth();
+                setMobileMenuOpen(false);
+              }}
               disabled={isLoggingIn}
-              className="w-full px-4 py-2 rounded border border-white text-white text-sm font-medium hover:bg-white hover:text-[#0A1F44] transition-colors disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded border border-white text-white text-sm font-medium hover:bg-white hover:text-[#0A1F44] transition-colors disabled:opacity-50"
             >
-              {isLoggingIn ? 'Logging in...' : isAuthenticated ? 'Logout' : 'Login'}
+              {isAuthenticated ? (
+                <LogOut className="w-4 h-4" />
+              ) : (
+                <LogIn className="w-4 h-4" />
+              )}
+              {authButtonLabel}
             </button>
           </div>
         </div>

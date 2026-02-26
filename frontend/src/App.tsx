@@ -1,4 +1,4 @@
-import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet, redirect } from '@tanstack/react-router';
+import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet } from '@tanstack/react-router';
 import { useInternetIdentity } from './hooks/useInternetIdentity';
 import HomePage from './pages/HomePage';
 import DashboardPage from './pages/DashboardPage';
@@ -6,6 +6,7 @@ import TestPage from './pages/TestPage';
 import TestResultPage from './pages/TestResultPage';
 import AdminPage from './pages/AdminPage';
 import ProfileSetupModal from './components/ProfileSetupModal';
+import Navbar from './components/Navbar';
 import { useGetCallerUserProfile } from './hooks/useGetCallerUserProfile';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -14,7 +15,17 @@ function RootLayout() {
   const isAuthenticated = !!identity;
   const { data: userProfile, isLoading: profileLoading, isFetched } = useGetCallerUserProfile();
 
-  const showProfileSetup = isAuthenticated && !profileLoading && isFetched && userProfile === null;
+  // Show profile setup only when:
+  // 1. User is authenticated
+  // 2. We're not still initializing auth
+  // 3. Profile query has completed (isFetched)
+  // 4. Profile is null (first-time user)
+  const showProfileSetup =
+    isAuthenticated &&
+    !isInitializing &&
+    !profileLoading &&
+    isFetched &&
+    userProfile === null;
 
   if (isInitializing) {
     return (
@@ -29,6 +40,7 @@ function RootLayout() {
 
   return (
     <>
+      <Navbar />
       <Outlet />
       {showProfileSetup && <ProfileSetupModal />}
       <Toaster />

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 13,
+  "projectStateVersion": 19,
   "summary": "Responsive MHT-CET test series website named 'Concept Delta' with Navy Blue/White minimal theme. Includes Home Page, Dashboard, Test Page, and Admin Panel. Uses Google Login auth with user profile collection. Backend with database for users, tests, questions, and results.",
   "architectural_notes": [
     "Navy Blue primary color, White background, modern minimal UI across all pages",
@@ -9,7 +9,9 @@
     "Admin panel protected route — accessible only to admin users",
     "Questions stored as uploaded images; tests composed by selecting from question gallery"
   ],
-  "known_issues": [],
+  "known_issues": [
+    "Admin button/link not visible on home screen for admin users"
+  ],
   "isFixRequest": false,
   "existing_features": [
     {
@@ -131,6 +133,46 @@
         "REQ-18"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-fix-navbar-tsx-so-that-it-renders-correctly-on-the-home-page-route-the-navbar-must-always-display-the-triangular-delta-logo-and-concept-delta-brand-name-on-the-left-a-login-button-when-unauthenticated-or-logout-button-when-authenticated-on-the-right-and-when-authenticated-nav-links-for-home-and-dashboard-plus-admin-only-for-users-with-isadmin-true-ensure-navbar-tsx-is-imported-and-rendered-in-the-root-layout-app-tsx-or-equivalent-so-it-appears-on-every-page-including-the-home-screen-debug-and-resolve-any-conditional-rendering-auth-state-initialization-or-import-issue-that-prevents-the-navbar-and-its-buttons-from-appearing-on-first-load-of-the-home-screen",
+      "title": "Fix Navbar.tsx so that it renders correctly on the Home page ('/' route). The navbar must always display: the triangular delta logo and 'Concept Delta' brand name on the left; a Login button (when unauthenticated) or Logout button (when authenticated) on the right; and — when authenticated — nav links for 'Home' and 'Dashboard', plus 'Admin' only for users with isAdmin = true. Ensure Navbar.tsx is imported and rendered in the root layout (App.tsx or equivalent) so it appears on every page including the home screen. Debug and resolve any conditional rendering, auth-state initialization, or import issue that prevents the navbar and its buttons from appearing on first load of the home screen.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-navbar-tsx-so-that-the-admin-navigation-link-is-visible-on-the-home-page-route-for-authenticated-users-with-isadmin-true-the-admin-link-must-appear-in-both-the-desktop-nav-and-the-mobile-hamburger-menu-whenever-the-authenticated-user-s-profile-has-isadmin-true-regardless-of-the-current-route-audit-the-auth-state-and-profile-loading-logic-in-navbar-tsx-to-ensure-isadmin-is-correctly-read-from-the-user-profile-and-is-not-lost-or-reset-on-the-home-route-the-fix-must-not-affect-visibility-rules-for-non-admin-users-admin-link-must-remain-hidden-from-them",
+      "title": "Fix Navbar.tsx so that the 'Admin' navigation link is visible on the Home page ('/' route) for authenticated users with isAdmin = true. The Admin link must appear in both the desktop nav and the mobile hamburger menu whenever the authenticated user's profile has isAdmin = true, regardless of the current route. Audit the auth state and profile loading logic in Navbar.tsx to ensure isAdmin is correctly read from the user profile and is not lost or reset on the Home route. The fix must not affect visibility rules for non-admin users (Admin link must remain hidden from them).",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-complete-the-admin-panel-page-frontend-src-pages-adminpage-tsx-and-all-its-sub-components-to-ensure-all-five-tabs-are-fully-functional-1-question-gallery-upload-question-options-image-from-device-select-correct-answer-a-b-c-d-save-question-display-all-saved-questions-as-a-grid-with-correct-answer-badge-and-support-deleting-a-question-2-test-builder-create-a-new-test-by-entering-a-name-and-duration-in-minutes-select-questions-from-the-question-gallery-grid-and-save-the-test-3-test-management-list-all-tests-with-name-duration-question-count-and-a-publish-unpublish-toggle-switch-4-users-display-a-paginated-scrollable-table-of-all-registered-users-with-columns-name-principal-class-contact-5-results-display-a-table-of-all-test-results-with-columns-username-test-name-score-with-percentage-all-tabs-must-use-the-navy-blue-0a1f44-and-white-theme-white-page-card-backgrounds-navy-tab-labels-active-tab-with-solid-navy-background-and-white-text-navy-table-headers-and-all-action-buttons-using-the-navy-white-palette",
+      "title": "Complete the Admin Panel page (frontend/src/pages/AdminPage.tsx) and all its sub-components to ensure all five tabs are fully functional: (1) Question Gallery — upload question+options image from device, select correct answer (A/B/C/D), save question, display all saved questions as a grid with correct answer badge, and support deleting a question; (2) Test Builder — create a new test by entering a name and duration in minutes, select questions from the question gallery grid, and save the test; (3) Test Management — list all tests with name, duration, question count, and a publish/unpublish toggle switch; (4) Users — display a paginated/scrollable table of all registered users with columns: Name, Principal, Class, Contact; (5) Results — display a table of all test results with columns: Username, Test Name, Score (with percentage). All tabs must use the Navy Blue (#0A1F44) and White theme: white page/card backgrounds, navy tab labels, active tab with solid navy background and white text, navy table headers, and all action buttons using the navy/white palette.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-the-platform-does-not-support-google-login-the-authentication-system-must-use-internet-identity-already-implemented-via-useinternetidentity-ts-and-the-existing-internetidentityprovider-remove-any-references-to-google-login-from-the-codebase-including-the-home-page-navbar-login-button-any-google-oauth-configuration-and-any-ui-copy-mentioning-google-replace-all-such-references-with-the-existing-internet-identity-login-flow-login-logout-via-useinternetidentity-hook",
+      "title": "The platform does not support Google Login. The authentication system must use Internet Identity (already implemented via useInternetIdentity.ts and the existing InternetIdentityProvider). Remove any references to Google Login from the codebase — including the Home Page navbar login button, any Google OAuth configuration, and any UI copy mentioning Google. Replace all such references with the existing Internet Identity login flow (login/logout via useInternetIdentity hook).",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-after-a-user-authenticates-via-internet-identity-for-the-first-time-i-e-their-profile-does-not-yet-exist-in-the-backend-display-the-existing-profilesetupmodal-collecting-full-name-text-required-class-dropdown-11th-12th-dropper-required-and-contact-number-numeric-required-on-submission-call-the-backend-registeruser-saveprofile-function-to-persist-the-profile-data-then-redirect-the-user-to-dashboard-this-flow-already-exists-in-profilesetupmodal-tsx-verify-it-is-correctly-wired-to-the-internet-identity-auth-state-and-that-the-backend-call-succeeds-fix-any-broken-integration",
+      "title": "After a user authenticates via Internet Identity for the first time (i.e., their profile does not yet exist in the backend), display the existing ProfileSetupModal collecting: Full Name (text, required), Class (dropdown: 11th / 12th / Dropper, required), and Contact Number (numeric, required). On submission, call the backend registerUser/saveProfile function to persist the profile data, then redirect the user to /dashboard. This flow already exists in ProfileSetupModal.tsx — verify it is correctly wired to the Internet Identity auth state and that the backend call succeeds. Fix any broken integration.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -198,6 +240,14 @@
       "id": "AR-13",
       "summary": "Navbar: show Home, Dashboard, and Admin (admin-only) navigation buttons/links for logged-in users; Admin link visible only to admin users",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Audit and verify the backend Motoko actor (backend/main.mo) to ensure all admin-required functions are implemented and exposed: getAllQuestions, addQuestion, deleteQuestion, createTest, updateTest, togglePublish, getAllUsers, getAllResults, markAdminVisited, and hasAdminBeenVisited. Each admin function must be guarded by an isAdmin check on the calling principal. If any of these functions are missing or incomplete, implement them with the appropriate guards and return types consistent with the existing data models (Questions, Tests, Users, TestResults).",
+      "reqIds": [
+        "REQ-22"
+      ],
       "status": "pending"
     }
   ],

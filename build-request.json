@@ -1,40 +1,59 @@
 {
   "kind": "build_request",
-  "title": "Update Navbar to show Home, Dashboard, and Admin (admin-only) nav links",
+  "title": "Replace Google Login with Internet Identity authentication (platform-native auth)",
   "projectName": "Concept Delta",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-18",
-      "text": "Update Navbar.tsx so that when a user is authenticated, the navbar displays navigation links for 'Home', 'Dashboard', and — visible only to users with isAdmin = true — 'Admin'. The 'Admin' link must be hidden from non-admin authenticated users and from unauthenticated visitors. All links must follow the existing Navy Blue (#0A1F44) and White theme: white text on the navy background, with a hover/active highlight consistent with the current navbar style.",
+      "id": "REQ-23",
+      "text": "The platform does not support Google Login. The authentication system must use Internet Identity (already implemented via useInternetIdentity.ts and the existing InternetIdentityProvider). Remove any references to Google Login from the codebase — including the Home Page navbar login button, any Google OAuth configuration, and any UI copy mentioning Google. Replace all such references with the existing Internet Identity login flow (login/logout via useInternetIdentity hook).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "show home, dashboard and admin for admin only button in navbar"
+          "Google Login authentication"
         ]
       },
       "acceptanceCriteria": [
-        "When a non-authenticated user visits any page, the navbar shows no navigation links (Home, Dashboard, Admin).",
-        "When an authenticated non-admin user is logged in, the navbar shows 'Home' and 'Dashboard' links only; the 'Admin' link is not rendered.",
-        "When an authenticated admin user (isAdmin = true) is logged in, the navbar shows 'Home', 'Dashboard', and 'Admin' links.",
-        "'Home' navigates to '/', 'Dashboard' navigates to '/dashboard', and 'Admin' navigates to '/admin'.",
-        "All nav links use white text on the #0A1F44 navbar background, consistent with the existing Navy Blue/White theme.",
-        "The mobile hamburger menu also respects the same visibility rules for each nav link.",
-        "No other navbar behaviour (logo, login/logout button, sticky positioning) is changed."
+        "No Google Login button or OAuth flow exists anywhere in the app",
+        "The navbar Login button triggers Internet Identity authentication",
+        "All UI copy referring to Google Login is removed or replaced with 'Login with Internet Identity'"
+      ]
+    },
+    {
+      "id": "REQ-24",
+      "text": "After a user authenticates via Internet Identity for the first time (i.e., their profile does not yet exist in the backend), display the existing ProfileSetupModal collecting: Full Name (text, required), Class (dropdown: 11th / 12th / Dropper, required), and Contact Number (numeric, required). On submission, call the backend registerUser/saveProfile function to persist the profile data, then redirect the user to /dashboard. This flow already exists in ProfileSetupModal.tsx — verify it is correctly wired to the Internet Identity auth state and that the backend call succeeds. Fix any broken integration.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "After login ask: Full Name, Class (11th/12th/Dropper), Contact Number",
+          "Save user data in database"
+        ]
+      },
+      "acceptanceCriteria": [
+        "After first Internet Identity login, the profile setup modal is shown automatically",
+        "The modal collects Full Name, Class (11th/12th/Dropper), and Contact Number",
+        "Submitting the form calls the backend and persists the user profile",
+        "After successful profile save, the user is redirected to /dashboard",
+        "Returning users (profile already exists) are not shown the modal again"
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui.",
-    "All styling must remain within the Navy Blue (#0A1F44) and White theme — do not introduce new accent colours."
+    "Do NOT implement Google OAuth or any third-party authentication. Only Internet Identity is supported on this platform.",
+    "Do not modify files in frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts.",
+    "Do not modify files under frontend/src/components/ui.",
+    "Do not modify frontend/src/main.tsx."
   ],
   "nonGoals": [
-    "Changing the admin route guard logic in AdminRoute.tsx or ProtectedRoute.tsx.",
-    "Changing the backend isAdmin logic.",
-    "Adding new pages or routes."
+    "Adding any new authentication providers beyond Internet Identity",
+    "Changing the profile fields beyond Full Name, Class, and Contact Number",
+    "Modifying the backend data model for user profiles (already implemented)"
   ],
   "imageRequirements": {
     "required": [],
