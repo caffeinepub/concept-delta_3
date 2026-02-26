@@ -1,59 +1,38 @@
 {
   "kind": "build_request",
-  "title": "Replace Google Login with Internet Identity authentication (platform-native auth)",
+  "title": "Fix ProfileSetupModal background to solid white/dark",
   "projectName": "Concept Delta",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-23",
-      "text": "The platform does not support Google Login. The authentication system must use Internet Identity (already implemented via useInternetIdentity.ts and the existing InternetIdentityProvider). Remove any references to Google Login from the codebase — including the Home Page navbar login button, any Google OAuth configuration, and any UI copy mentioning Google. Replace all such references with the existing Internet Identity login flow (login/logout via useInternetIdentity hook).",
+      "id": "REQ-25",
+      "text": "Update ProfileSetupModal.tsx so the modal overlay uses a solid dark background (e.g. rgba(0,0,0,0.85) or bg-gray-900) and the modal card itself uses a solid white background (#FFFFFF) with navy (#0A1F44) text. Remove any semi-transparent or translucent background styles that cause the underlying page content to show through the modal, making the form fields and labels unreadable.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Google Login authentication"
+          "see screenshot clearly onboarding from (name class,contact number) filling section now visible so please keep dark white solid background for this"
         ]
       },
       "acceptanceCriteria": [
-        "No Google Login button or OAuth flow exists anywhere in the app",
-        "The navbar Login button triggers Internet Identity authentication",
-        "All UI copy referring to Google Login is removed or replaced with 'Login with Internet Identity'"
-      ]
-    },
-    {
-      "id": "REQ-24",
-      "text": "After a user authenticates via Internet Identity for the first time (i.e., their profile does not yet exist in the backend), display the existing ProfileSetupModal collecting: Full Name (text, required), Class (dropdown: 11th / 12th / Dropper, required), and Contact Number (numeric, required). On submission, call the backend registerUser/saveProfile function to persist the profile data, then redirect the user to /dashboard. This flow already exists in ProfileSetupModal.tsx — verify it is correctly wired to the Internet Identity auth state and that the backend call succeeds. Fix any broken integration.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "After login ask: Full Name, Class (11th/12th/Dropper), Contact Number",
-          "Save user data in database"
-        ]
-      },
-      "acceptanceCriteria": [
-        "After first Internet Identity login, the profile setup modal is shown automatically",
-        "The modal collects Full Name, Class (11th/12th/Dropper), and Contact Number",
-        "Submitting the form calls the backend and persists the user profile",
-        "After successful profile save, the user is redirected to /dashboard",
-        "Returning users (profile already exists) are not shown the modal again"
+        "The modal overlay behind the ProfileSetupModal card is fully opaque dark (no page content visible through it).",
+        "The modal card has a solid white (#FFFFFF) background — no transparency or blur effect.",
+        "All form labels (Full Name, Class, Contact Number), input fields, validation messages, and the Save & Continue button are clearly readable against the solid white card.",
+        "The modal appearance is consistent on both desktop and mobile viewports.",
+        "No underlying home page content bleeds through the modal card or its overlay."
       ]
     }
   ],
   "constraints": [
-    "Do NOT implement Google OAuth or any third-party authentication. Only Internet Identity is supported on this platform.",
-    "Do not modify files in frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts.",
-    "Do not modify files under frontend/src/components/ui.",
-    "Do not modify frontend/src/main.tsx."
+    "Do not modify any file under frontend/src/hooks/ (immutable paths).",
+    "Do not alter the ProfileSetupModal form fields, validation logic, or backend submission flow — only fix the background/styling."
   ],
   "nonGoals": [
-    "Adding any new authentication providers beyond Internet Identity",
-    "Changing the profile fields beyond Full Name, Class, and Contact Number",
-    "Modifying the backend data model for user profiles (already implemented)"
+    "Redesigning the ProfileSetupModal layout or form structure.",
+    "Changing any backend logic.",
+    "Modifying any other page or component."
   ],
   "imageRequirements": {
     "required": [],

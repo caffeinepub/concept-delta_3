@@ -1,54 +1,23 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Replace Google Login with Internet Identity authentication",
+  "title": "Fix ProfileSetupModal background to solid white/dark",
   "requirements": [
     {
-      "id": "REQ-23",
-      "summary": "Remove all Google Login references and replace with Internet Identity authentication",
+      "id": "REQ-25",
+      "summary": "Update ProfileSetupModal to use a solid dark overlay (rgba(0,0,0,0.85) or bg-gray-900) and a solid white card background (#FFFFFF) with navy (#0A1F44) text, removing all transparency that causes underlying page content to show through.",
       "acceptanceCriteria": [
-        "No Google Login button or OAuth flow exists anywhere in the app",
-        "The navbar Login button triggers Internet Identity authentication",
-        "All UI copy referring to Google Login is removed or replaced with 'Login with Internet Identity'"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/Navbar.tsx",
-          "operation": "modify",
-          "description": "Remove any Google Login button or references. Ensure the existing Login button uses the useInternetIdentity hook for authentication. The button should display 'Login with Internet Identity' or similar copy, and trigger login() when clicked. Verify the logout flow clears the query cache. Review the file to identify and remove any Google OAuth configuration or UI elements."
-        },
-        {
-          "path": "frontend/src/pages/HomePage.tsx",
-          "operation": "modify",
-          "description": "Search for and remove any mentions of 'Google Login', 'Google', or 'OAuth' in UI copy, CTAs, or feature descriptions. Replace with 'Internet Identity' or remove entirely if not essential. Ensure all authentication references point to Internet Identity."
-        }
-      ]
-    },
-    {
-      "id": "REQ-24",
-      "summary": "Wire ProfileSetupModal to Internet Identity first-login flow and ensure backend profile persistence",
-      "acceptanceCriteria": [
-        "After first Internet Identity login, the profile setup modal is shown automatically",
-        "The modal collects Full Name, Class (11th/12th/Dropper), and Contact Number",
-        "Submitting the form calls the backend and persists the user profile",
-        "After successful profile save, the user is redirected to /dashboard",
-        "Returning users (profile already exists) are not shown the modal again"
+        "The modal overlay behind the ProfileSetupModal card is fully opaque dark (no page content visible through it).",
+        "The modal card has a solid white (#FFFFFF) background — no transparency or blur effect.",
+        "All form labels (Full Name, Class, Contact Number), input fields, validation messages, and the Save & Continue button are clearly readable against the solid white card.",
+        "The modal appearance is consistent on both desktop and mobile viewports.",
+        "No underlying home page content bleeds through the modal card or its overlay."
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/ProfileSetupModal.tsx",
           "operation": "modify",
-          "description": "Verify that the modal is correctly wired to the Internet Identity auth state from useInternetIdentity and that it calls saveCallerUserProfile (or registerUser) mutation on form submission. Ensure it redirects to /dashboard after successful profile save. Fix any broken integration with the auth state or backend call. The modal should only appear when isAuthenticated is true, the user profile has been fetched, and userProfile is null (first-time user)."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Ensure ProfileSetupModal is rendered in the root layout and receives the correct props to determine visibility. It should show when: user is authenticated via Internet Identity, the profile query has completed (isFetched), and getCallerUserProfile returns null. Verify the modal does not flash on page load by properly checking both actorFetching and query states. Fix any issues with modal trigger logic or state dependency."
-        },
-        {
-          "path": "frontend/src/hooks/useGetCallerUserProfile.ts",
-          "operation": "modify",
-          "description": "Verify the hook properly exposes isFetched state alongside isLoading to prevent profile setup modal flashing. Ensure isLoading reflects both actorFetching and query.isLoading, and that isFetched is only true when actor is ready and query.isFetched is true. This prevents the modal from appearing before the profile check completes."
+          "description": "Replace any semi-transparent or translucent background styles on the modal overlay with a solid dark background (rgba(0,0,0,0.85) or bg-gray-900). Replace the modal card background with a solid white #FFFFFF background. Ensure all text (labels, inputs, validation messages) uses navy #0A1F44 for maximum readability against the white card. Remove any backdrop-blur, opacity, or transparency classes that allow underlying content to show through."
         }
       ]
     }

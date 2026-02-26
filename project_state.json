@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 19,
+  "projectStateVersion": 21,
   "summary": "Responsive MHT-CET test series website named 'Concept Delta' with Navy Blue/White minimal theme. Includes Home Page, Dashboard, Test Page, and Admin Panel. Uses Google Login auth with user profile collection. Backend with database for users, tests, questions, and results.",
   "architectural_notes": [
     "Navy Blue primary color, White background, modern minimal UI across all pages",
@@ -10,9 +10,10 @@
     "Questions stored as uploaded images; tests composed by selecting from question gallery"
   ],
   "known_issues": [
-    "Admin button/link not visible on home screen for admin users"
+    "Admin button/link not visible on home screen for admin users",
+    "Onboarding form (profile setup modal) background is not solid — needs a solid dark/white background for visibility"
   ],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-design-and-apply-a-consistent-navy-blue-0a1f44-and-white-visual-theme-across-all-pages-with-modern-minimal-ui-clean-sans-serif-typography-generous-whitespace-and-fully-mobile-responsive-layouts-using-tailwind-css",
@@ -173,6 +174,14 @@
         "REQ-24"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-update-profilesetupmodal-tsx-so-the-modal-overlay-uses-a-solid-dark-background-e-g-rgba-0-0-0-0-85-or-bg-gray-900-and-the-modal-card-itself-uses-a-solid-white-background-ffffff-with-navy-0a1f44-text-remove-any-semi-transparent-or-translucent-background-styles-that-cause-the-underlying-page-content-to-show-through-the-modal-making-the-form-fields-and-labels-unreadable",
+      "title": "Update ProfileSetupModal.tsx so the modal overlay uses a solid dark background (e.g. rgba(0,0,0,0.85) or bg-gray-900) and the modal card itself uses a solid white background (#FFFFFF) with navy (#0A1F44) text. Remove any semi-transparent or translucent background styles that cause the underlying page content to show through the modal, making the form fields and labels unreadable.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -248,6 +257,12 @@
       "reqIds": [
         "REQ-22"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Onboarding/profile setup modal (Name, Class, Contact Number): use a solid dark/white background (not transparent) so it is clearly visible",
+      "reqIds": [],
       "status": "pending"
     }
   ],

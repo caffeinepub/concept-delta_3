@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-the-platform-does-not-support-google-login-the-authentication-system-must-use-internet-identity-already-implemented-via-useinternetidentity-ts-and-the-existing-internetidentityprovider-remove-any-references-to-google-login-from-the-codebase-including-the-home-page-navbar-login-button-any-google-oauth-configuration-and-any-ui-copy-mentioning-google-replace-all-such-references-with-the-existing-internet-identity-login-flow-login-logout-via-useinternetidentity-hook",
-      "featureTitle": "The platform does not support Google Login. The authentication system must use Internet Identity (already implemented via useInternetIdentity.ts and the existing InternetIdentityProvider). Remove any references to Google Login from the codebase — including the Home Page navbar login button, any Google OAuth configuration, and any UI copy mentioning Google. Replace all such references with the existing Internet Identity login flow (login/logout via useInternetIdentity hook).",
+      "featureId": "feature-update-profilesetupmodal-tsx-so-the-modal-overlay-uses-a-solid-dark-background-e-g-rgba-0-0-0-0-85-or-bg-gray-900-and-the-modal-card-itself-uses-a-solid-white-background-ffffff-with-navy-0a1f44-text-remove-any-semi-transparent-or-translucent-background-styles-that-cause-the-underlying-page-content-to-show-through-the-modal-making-the-form-fields-and-labels-unreadable",
+      "featureTitle": "Update ProfileSetupModal.tsx so the modal overlay uses a solid dark background (e.g. rgba(0,0,0,0.85) or bg-gray-900) and the modal card itself uses a solid white background (#FFFFFF) with navy (#0A1F44) text. Remove any semi-transparent or translucent background styles that cause the underlying page content to show through the modal, making the form fields and labels unreadable.",
       "files": [
-        "frontend/src/components/Navbar.tsx"
+        "frontend/src/components/ProfileSetupModal.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -17,29 +17,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-23"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-after-a-user-authenticates-via-internet-identity-for-the-first-time-i-e-their-profile-does-not-yet-exist-in-the-backend-display-the-existing-profilesetupmodal-collecting-full-name-text-required-class-dropdown-11th-12th-dropper-required-and-contact-number-numeric-required-on-submission-call-the-backend-registeruser-saveprofile-function-to-persist-the-profile-data-then-redirect-the-user-to-dashboard-this-flow-already-exists-in-profilesetupmodal-tsx-verify-it-is-correctly-wired-to-the-internet-identity-auth-state-and-that-the-backend-call-succeeds-fix-any-broken-integration",
-      "featureTitle": "After a user authenticates via Internet Identity for the first time (i.e., their profile does not yet exist in the backend), display the existing ProfileSetupModal collecting: Full Name (text, required), Class (dropdown: 11th / 12th / Dropper, required), and Contact Number (numeric, required). On submission, call the backend registerUser/saveProfile function to persist the profile data, then redirect the user to /dashboard. This flow already exists in ProfileSetupModal.tsx — verify it is correctly wired to the Internet Identity auth state and that the backend call succeeds. Fix any broken integration.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/ProfileSetupModal.tsx",
-        "frontend/src/hooks/useGetCallerUserProfile.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-24"
+        "REQ-25"
       ],
       "confidence": "high"
     }

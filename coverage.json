@@ -1,55 +1,34 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-26T09:32:59.922Z",
+  "generatedAt": "2026-02-26T09:53:03.116Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-23",
-        "summary": "The platform does not support Google Login. The authentication system must use Internet Identity (already implemented via useInternetIdentity.ts and the existing InternetIdentityProvider). Remove any references to Google Login from the codebase — including the Home Page navbar login button, any Google OAuth configuration, and any UI copy mentioning Google. Replace all such references with the existing Internet Identity login flow (login/logout via useInternetIdentity hook).",
+        "id": "REQ-25",
+        "summary": "Update ProfileSetupModal.tsx so the modal overlay uses a solid dark background (e.g. rgba(0,0,0,0.85) or bg-gray-900) and the modal card itself uses a solid white background (#FFFFFF) with navy (#0A1F44) text. Remove any semi-transparent or translucent background styles that cause the underlying page content to show through the modal, making the form fields and labels unreadable.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Navbar.tsx",
-          "frontend/src/pages/HomePage.tsx"
+          "frontend/src/components/ProfileSetupModal.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/Navbar.tsx"
-        ]
-      },
-      {
-        "id": "REQ-24",
-        "summary": "After a user authenticates via Internet Identity for the first time (i.e., their profile does not yet exist in the backend), display the existing ProfileSetupModal collecting: Full Name (text, required), Class (dropdown: 11th / 12th / Dropper, required), and Contact Number (numeric, required). On submission, call the backend registerUser/saveProfile function to persist the profile data, then redirect the user to /dashboard. This flow already exists in ProfileSetupModal.tsx — verify it is correctly wired to the Internet Identity auth state and that the backend call succeeds. Fix any broken integration.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/ProfileSetupModal.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/hooks/useGetCallerUserProfile.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/ProfileSetupModal.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/hooks/useGetCallerUserProfile.ts"
+          "frontend/src/components/ProfileSetupModal.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/components/Navbar.tsx",
     "frontend/src/components/ProfileSetupModal.tsx",
-    "frontend/src/hooks/useGetCallerUserProfile.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
