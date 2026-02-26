@@ -11,6 +11,9 @@ export default function ResultsTab() {
   const getTestName = (testId: bigint) =>
     tests?.find(t => t.id === testId)?.name ?? `Test #${testId}`;
 
+  const getTest = (testId: bigint) =>
+    tests?.find(t => t.id === testId);
+
   const getUserName = (userId: { toString(): string }) => {
     const match = users?.find(([p]) => p.toString() === userId.toString());
     return match ? match[1].fullName : userId.toString().slice(0, 12) + '…';
@@ -44,15 +47,21 @@ export default function ResultsTab() {
                 <tr className="bg-[#0A1F44]">
                   <th className="text-left px-5 py-3 text-white font-medium">Student</th>
                   <th className="text-left px-5 py-3 text-white font-medium hidden sm:table-cell">Test</th>
-                  <th className="text-left px-5 py-3 text-white font-medium">Score</th>
+                  <th className="text-left px-5 py-3 text-white font-medium">Marks</th>
+                  <th className="text-left px-5 py-3 text-white font-medium hidden lg:table-cell">Correct</th>
                   <th className="text-left px-5 py-3 text-white font-medium hidden md:table-cell">Date</th>
                 </tr>
               </thead>
               <tbody>
                 {results.map((result, idx) => {
-                  const test = tests?.find(t => t.id === result.testId);
-                  const totalQuestions = test?.questions.length ?? 1;
-                  const scorePercent = Math.round((Number(result.score) / totalQuestions) * 100);
+                  const test = getTest(result.testId);
+                  const totalQuestions = test?.questions.length ?? 0;
+                  const marksPerCorrect = test ? Number(test.marksPerCorrect) : 1;
+                  const negativeMarks = test ? Number(test.negativeMarks) : 0;
+                  const maxMarks = totalQuestions * marksPerCorrect;
+                  const marks = Number(result.marks);
+                  const correctCount = Number(result.score);
+                  const marksPercent = maxMarks > 0 ? Math.round((Math.max(0, marks) / maxMarks) * 100) : 0;
 
                   return (
                     <tr
@@ -68,10 +77,18 @@ export default function ResultsTab() {
                       <td className="px-5 py-3">
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-[#0A1F44]">
-                            {result.score.toString()}/{totalQuestions}
+                            {marks} / {maxMarks}
                           </span>
-                          <span className="text-xs text-gray-400">({scorePercent}%)</span>
+                          <span className="text-xs text-gray-400">({marksPercent}%)</span>
                         </div>
+                        {negativeMarks > 0 && (
+                          <div className="text-xs text-gray-400 mt-0.5">
+                            +{marksPerCorrect}/−{negativeMarks}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-5 py-3 text-gray-500 hidden lg:table-cell">
+                        {correctCount}/{totalQuestions} correct
                       </td>
                       <td className="px-5 py-3 text-gray-400 text-xs hidden md:table-cell">
                         {formatDate(result.submittedAt)}

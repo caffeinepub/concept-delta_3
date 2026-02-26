@@ -36,6 +36,7 @@ export const Answer = IDL.Record({
 });
 export const Time = IDL.Int;
 export const TestResult = IDL.Record({
+  'marks' : IDL.Int,
   'userId' : IDL.Principal,
   'answers' : IDL.Vec(Answer),
   'submittedAt' : Time,
@@ -47,7 +48,9 @@ export const CompleteTest = IDL.Record({
   'isPublished' : IDL.Bool,
   'name' : IDL.Text,
   'durationMinutes' : IDL.Nat,
+  'marksPerCorrect' : IDL.Int,
   'questions' : IDL.Vec(Question),
+  'negativeMarks' : IDL.Int,
 });
 export const Class = IDL.Variant({
   'dropper' : IDL.Null,
@@ -91,7 +94,11 @@ export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'addQuestion' : IDL.Func([ExternalBlob, IDL.Text], [IDL.Nat], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-  'createTest' : IDL.Func([IDL.Text, IDL.Nat, IDL.Vec(IDL.Nat)], [IDL.Nat], []),
+  'createTest' : IDL.Func(
+      [IDL.Text, IDL.Nat, IDL.Vec(IDL.Nat), IDL.Int, IDL.Int],
+      [IDL.Nat],
+      [],
+    ),
   'deleteQuestion' : IDL.Func([IDL.Nat], [], []),
   'getAllQuestions' : IDL.Func([], [IDL.Vec(Question)], ['query']),
   'getAllResults' : IDL.Func([], [IDL.Vec(TestResult)], ['query']),
@@ -117,12 +124,12 @@ export const idlService = IDL.Service({
   'markAdminVisited' : IDL.Func([], [], []),
   'registerUser' : IDL.Func([UserProfile], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
-  'submitTestResult' : IDL.Func([IDL.Nat, IDL.Vec(Answer), IDL.Nat], [], []),
+  'submitTestResult' : IDL.Func([IDL.Nat, IDL.Vec(Answer)], [], []),
   'togglePublishTest' : IDL.Func([IDL.Nat], [], []),
   'updateProfile' : IDL.Func([UserProfile], [], []),
   'updateQuestion' : IDL.Func([IDL.Nat, ExternalBlob, IDL.Text], [], []),
   'updateTest' : IDL.Func(
-      [IDL.Nat, IDL.Text, IDL.Nat, IDL.Vec(IDL.Nat)],
+      [IDL.Nat, IDL.Text, IDL.Nat, IDL.Vec(IDL.Nat), IDL.Int, IDL.Int],
       [],
       [],
     ),
@@ -159,6 +166,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const Time = IDL.Int;
   const TestResult = IDL.Record({
+    'marks' : IDL.Int,
     'userId' : IDL.Principal,
     'answers' : IDL.Vec(Answer),
     'submittedAt' : Time,
@@ -170,7 +178,9 @@ export const idlFactory = ({ IDL }) => {
     'isPublished' : IDL.Bool,
     'name' : IDL.Text,
     'durationMinutes' : IDL.Nat,
+    'marksPerCorrect' : IDL.Int,
     'questions' : IDL.Vec(Question),
+    'negativeMarks' : IDL.Int,
   });
   const Class = IDL.Variant({
     'dropper' : IDL.Null,
@@ -215,7 +225,7 @@ export const idlFactory = ({ IDL }) => {
     'addQuestion' : IDL.Func([ExternalBlob, IDL.Text], [IDL.Nat], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'createTest' : IDL.Func(
-        [IDL.Text, IDL.Nat, IDL.Vec(IDL.Nat)],
+        [IDL.Text, IDL.Nat, IDL.Vec(IDL.Nat), IDL.Int, IDL.Int],
         [IDL.Nat],
         [],
       ),
@@ -244,12 +254,12 @@ export const idlFactory = ({ IDL }) => {
     'markAdminVisited' : IDL.Func([], [], []),
     'registerUser' : IDL.Func([UserProfile], [], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
-    'submitTestResult' : IDL.Func([IDL.Nat, IDL.Vec(Answer), IDL.Nat], [], []),
+    'submitTestResult' : IDL.Func([IDL.Nat, IDL.Vec(Answer)], [], []),
     'togglePublishTest' : IDL.Func([IDL.Nat], [], []),
     'updateProfile' : IDL.Func([UserProfile], [], []),
     'updateQuestion' : IDL.Func([IDL.Nat, ExternalBlob, IDL.Text], [], []),
     'updateTest' : IDL.Func(
-        [IDL.Nat, IDL.Text, IDL.Nat, IDL.Vec(IDL.Nat)],
+        [IDL.Nat, IDL.Text, IDL.Nat, IDL.Vec(IDL.Nat), IDL.Int, IDL.Int],
         [],
         [],
       ),

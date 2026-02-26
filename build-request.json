@@ -1,38 +1,38 @@
 {
   "kind": "build_request",
-  "title": "Fix ProfileSetupModal background to solid white/dark",
-  "projectName": "Concept Delta",
-  "priority": "normal",
+  "title": "Fix transparent submit confirmation dialog background on Test Page",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-25",
-      "text": "Update ProfileSetupModal.tsx so the modal overlay uses a solid dark background (e.g. rgba(0,0,0,0.85) or bg-gray-900) and the modal card itself uses a solid white background (#FFFFFF) with navy (#0A1F44) text. Remove any semi-transparent or translucent background styles that cause the underlying page content to show through the modal, making the form fields and labels unreadable.",
+      "id": "REQ-30",
+      "text": "In TestPage.tsx, fix the 'Submit Test?' confirmation dialog/modal so that its overlay uses a solid dark background (e.g. rgba(0,0,0,0.85) or bg-gray-900) and the dialog card itself uses a solid white background (#FFFFFF) with navy (#0A1F44) text. The dialog currently renders with a transparent or semi-transparent background, causing the underlying question content to show through and making the confirmation text ('Submit Test?', 'You have answered X out of Y questions...'), the 'Submit Now' button, and the 'Continue Test' button unreadable. Remove all transparent or translucent background styles from the confirmation dialog overlay and card.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "see screenshot clearly onboarding from (name class,contact number) filling section now visible so please keep dark white solid background for this"
+          "see screenshot clearly after sumbiting test message see like this transparent so please this message background create dark white solid"
         ]
       },
       "acceptanceCriteria": [
-        "The modal overlay behind the ProfileSetupModal card is fully opaque dark (no page content visible through it).",
-        "The modal card has a solid white (#FFFFFF) background — no transparency or blur effect.",
-        "All form labels (Full Name, Class, Contact Number), input fields, validation messages, and the Save & Continue button are clearly readable against the solid white card.",
-        "The modal appearance is consistent on both desktop and mobile viewports.",
-        "No underlying home page content bleeds through the modal card or its overlay."
+        "The submit confirmation dialog overlay has a solid dark background (rgba(0,0,0,0.85) or equivalent) — no underlying page content is visible through the overlay.",
+        "The dialog card has a solid white (#FFFFFF) background — no transparency or translucency.",
+        "All text in the dialog ('Submit Test?', unanswered question warning) is clearly readable in navy (#0A1F44) on the white card.",
+        "The 'Submit Now' button is clearly visible with solid navy (#0A1F44) background and white text.",
+        "The 'Continue Test' button is clearly visible with appropriate solid styling.",
+        "The fix applies on both mobile and desktop viewports."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any file under frontend/src/hooks/ (immutable paths).",
-    "Do not alter the ProfileSetupModal form fields, validation logic, or backend submission flow — only fix the background/styling."
+    "Do not modify any files listed under frontend.immutablePaths.",
+    "All styling must remain consistent with the existing Navy Blue (#0A1F44) and White theme."
   ],
   "nonGoals": [
-    "Redesigning the ProfileSetupModal layout or form structure.",
-    "Changing any backend logic.",
-    "Modifying any other page or component."
+    "Changing the submit confirmation logic or flow.",
+    "Redesigning the test page layout beyond the dialog background fix.",
+    "Modifying the backend."
   ],
   "imageRequirements": {
     "required": [],

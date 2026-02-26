@@ -80,17 +80,16 @@ export function useSubmitTestResult() {
     mutationFn: async ({
       testId,
       answers,
-      score,
     }: {
       testId: bigint;
       answers: Answer[];
-      score: bigint;
     }) => {
       if (!actor) throw new Error('Actor not available');
-      await actor.submitTestResult(testId, answers, score);
+      await actor.submitTestResult(testId, answers);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['myResults'] });
+      queryClient.invalidateQueries({ queryKey: ['allResults'] });
     },
   });
 }
@@ -179,13 +178,17 @@ export function useCreateTest() {
       name,
       durationMinutes,
       questionIds,
+      marksPerCorrect,
+      negativeMarks,
     }: {
       name: string;
       durationMinutes: bigint;
       questionIds: bigint[];
+      marksPerCorrect: bigint;
+      negativeMarks: bigint;
     }) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.createTest(name, durationMinutes, questionIds);
+      return actor.createTest(name, durationMinutes, questionIds, marksPerCorrect, negativeMarks);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['allTests'] });
@@ -210,21 +213,6 @@ export function useTogglePublishTest() {
   });
 }
 
-// ─── Admin: All Users ──────────────────────────────────────────────────────
-
-export function useGetAllUsers() {
-  const { actor, isFetching: actorFetching } = useActor();
-
-  return useQuery<[import('@icp-sdk/core/principal').Principal, UserProfile][]>({
-    queryKey: ['allUsers'],
-    queryFn: async () => {
-      if (!actor) return [];
-      return actor.getAllUsers();
-    },
-    enabled: !!actor && !actorFetching,
-  });
-}
-
 // ─── Admin: All Results ────────────────────────────────────────────────────
 
 export function useGetAllResults() {
@@ -240,7 +228,33 @@ export function useGetAllResults() {
   });
 }
 
-// ─── Admin Check ───────────────────────────────────────────────────────────
+// ─── Admin: All Users ──────────────────────────────────────────────────────
+
+export function useGetAllUsers() {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery<[import('@dfinity/principal').Principal, UserProfile][]>({
+    queryKey: ['allUsers'],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllUsers();
+    },
+    enabled: !!actor && !actorFetching,
+  });
+}
+
+export function useGetCallerRole() {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery({
+    queryKey: ['callerRole'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.getCallerUserRole();
+    },
+    enabled: !!actor && !actorFetching,
+  });
+}
 
 export function useIsCallerAdmin() {
   const { actor, isFetching: actorFetching } = useActor();
@@ -248,29 +262,12 @@ export function useIsCallerAdmin() {
   return useQuery<boolean>({
     queryKey: ['isCallerAdmin'],
     queryFn: async () => {
-      if (!actor) return false;
+      if (!actor) throw new Error('Actor not available');
       return actor.isCallerAdmin();
     },
     enabled: !!actor && !actorFetching,
   });
 }
-
-// ─── Admin: Has Admin Been Visited ─────────────────────────────────────────
-
-export function useHasAdminBeenVisited() {
-  const { actor, isFetching: actorFetching } = useActor();
-
-  return useQuery<boolean>({
-    queryKey: ['hasAdminBeenVisited'],
-    queryFn: async () => {
-      if (!actor) return false;
-      return actor.hasAdminBeenVisited();
-    },
-    enabled: !!actor && !actorFetching,
-  });
-}
-
-// ─── Admin: Mark Admin Visited ─────────────────────────────────────────────
 
 export function useMarkAdminVisited() {
   const { actor } = useActor();
@@ -282,8 +279,20 @@ export function useMarkAdminVisited() {
       await actor.markAdminVisited();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['hasAdminBeenVisited'] });
       queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
     },
+  });
+}
+
+export function useHasAdminBeenVisited() {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery<boolean>({
+    queryKey: ['hasAdminBeenVisited'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.hasAdminBeenVisited();
+    },
+    enabled: !!actor && !actorFetching,
   });
 }

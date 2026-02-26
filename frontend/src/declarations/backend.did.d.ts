@@ -19,7 +19,9 @@ export interface CompleteTest {
   'isPublished' : boolean,
   'name' : string,
   'durationMinutes' : bigint,
+  'marksPerCorrect' : bigint,
   'questions' : Array<Question>,
+  'negativeMarks' : bigint,
 }
 export type ExternalBlob = Uint8Array;
 export interface Question {
@@ -28,6 +30,7 @@ export interface Question {
   'image' : ExternalBlob,
 }
 export interface TestResult {
+  'marks' : bigint,
   'userId' : Principal,
   'answers' : Array<Answer>,
   'submittedAt' : Time,
@@ -72,98 +75,35 @@ export interface _SERVICE {
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
-  /**
-   * / Add a new question. Admin only.
-   */
   'addQuestion' : ActorMethod<[ExternalBlob, string], bigint>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
-  /**
-   * / Create a new test. Admin only.
-   */
-  'createTest' : ActorMethod<[string, bigint, Array<bigint>], bigint>,
-  /**
-   * / Delete a question. Admin only.
-   */
+  'createTest' : ActorMethod<
+    [string, bigint, Array<bigint>, bigint, bigint],
+    bigint
+  >,
   'deleteQuestion' : ActorMethod<[bigint], undefined>,
-  /**
-   * / Get all questions. Admin only.
-   */
   'getAllQuestions' : ActorMethod<[], Array<Question>>,
-  /**
-   * / Get all test results. Admin only.
-   */
   'getAllResults' : ActorMethod<[], Array<TestResult>>,
-  /**
-   * / Get all tests (published and unpublished). Admin only.
-   */
   'getAllTests' : ActorMethod<[], Array<CompleteTest>>,
-  /**
-   * / Get all registered users. Admin only.
-   */
   'getAllUsers' : ActorMethod<[], Array<[Principal, UserProfile]>>,
-  /**
-   * / Get the calling user's own profile. Requires #user role.
-   */
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
-  /**
-   * / Get the calling user's profile. Requires #user role.
-   */
   'getMyProfile' : ActorMethod<[], [] | [UserProfile]>,
-  /**
-   * / Get the calling user's own test results. Requires #user role.
-   */
   'getMyResults' : ActorMethod<[], Array<TestResult>>,
-  /**
-   * / Get all published tests. Requires #user role.
-   */
   'getPublishedTests' : ActorMethod<[], Array<CompleteTest>>,
-  /**
-   * / Get a test by ID. Non-admins can only access published tests.
-   */
   'getTestById' : ActorMethod<[bigint], CompleteTest>,
-  /**
-   * / Get another user's profile. Caller must be the same user or an admin.
-   */
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
-  /**
-   * / Check if the caller has visited the admin.
-   */
   'hasAdminBeenVisited' : ActorMethod<[], boolean>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
-  /**
-   * / Mark that the admin has been visited by the caller (admin only).
-   */
   'markAdminVisited' : ActorMethod<[], undefined>,
-  /**
-   * / Register a new user profile. Requires #user role (must be authenticated).
-   */
   'registerUser' : ActorMethod<[UserProfile], undefined>,
-  /**
-   * / Save the calling user's own profile. Requires #user role.
-   */
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
-  /**
-   * / Submit a test result. Requires #user role.
-   */
-  'submitTestResult' : ActorMethod<[bigint, Array<Answer>, bigint], undefined>,
-  /**
-   * / Toggle publish/unpublish a test. Admin only.
-   */
+  'submitTestResult' : ActorMethod<[bigint, Array<Answer>], undefined>,
   'togglePublishTest' : ActorMethod<[bigint], undefined>,
-  /**
-   * / Update the calling user's profile. Requires #user role.
-   */
   'updateProfile' : ActorMethod<[UserProfile], undefined>,
-  /**
-   * / Update an existing question. Admin only.
-   */
   'updateQuestion' : ActorMethod<[bigint, ExternalBlob, string], undefined>,
-  /**
-   * / Update an existing test. Admin only.
-   */
   'updateTest' : ActorMethod<
-    [bigint, string, bigint, Array<bigint>],
+    [bigint, string, bigint, Array<bigint>, bigint, bigint],
     undefined
   >,
 }

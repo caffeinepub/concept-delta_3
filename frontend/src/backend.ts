@@ -115,7 +115,9 @@ export interface CompleteTest {
     isPublished: boolean;
     name: string;
     durationMinutes: bigint;
+    marksPerCorrect: bigint;
     questions: Array<Question>;
+    negativeMarks: bigint;
 }
 export interface UserProfile {
     fullName: string;
@@ -124,6 +126,7 @@ export interface UserProfile {
     userClass: Class;
 }
 export interface TestResult {
+    marks: bigint;
     userId: Principal;
     answers: Array<Answer>;
     submittedAt: Time;
@@ -148,97 +151,31 @@ export interface backendInterface {
     _caffeineStorageRefillCashier(refillInformation: _CaffeineStorageRefillInformation | null): Promise<_CaffeineStorageRefillResult>;
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
-    /**
-     * / Add a new question. Admin only.
-     */
     addQuestion(image: ExternalBlob, correctOption: string): Promise<bigint>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    /**
-     * / Create a new test. Admin only.
-     */
-    createTest(name: string, durationMinutes: bigint, questionIds: Array<bigint>): Promise<bigint>;
-    /**
-     * / Delete a question. Admin only.
-     */
+    createTest(name: string, durationMinutes: bigint, questionIds: Array<bigint>, marksPerCorrect: bigint, negativeMarks: bigint): Promise<bigint>;
     deleteQuestion(questionId: bigint): Promise<void>;
-    /**
-     * / Get all questions. Admin only.
-     */
     getAllQuestions(): Promise<Array<Question>>;
-    /**
-     * / Get all test results. Admin only.
-     */
     getAllResults(): Promise<Array<TestResult>>;
-    /**
-     * / Get all tests (published and unpublished). Admin only.
-     */
     getAllTests(): Promise<Array<CompleteTest>>;
-    /**
-     * / Get all registered users. Admin only.
-     */
     getAllUsers(): Promise<Array<[Principal, UserProfile]>>;
-    /**
-     * / Get the calling user's own profile. Requires #user role.
-     */
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
-    /**
-     * / Get the calling user's profile. Requires #user role.
-     */
     getMyProfile(): Promise<UserProfile | null>;
-    /**
-     * / Get the calling user's own test results. Requires #user role.
-     */
     getMyResults(): Promise<Array<TestResult>>;
-    /**
-     * / Get all published tests. Requires #user role.
-     */
     getPublishedTests(): Promise<Array<CompleteTest>>;
-    /**
-     * / Get a test by ID. Non-admins can only access published tests.
-     */
     getTestById(testId: bigint): Promise<CompleteTest>;
-    /**
-     * / Get another user's profile. Caller must be the same user or an admin.
-     */
     getUserProfile(user: Principal): Promise<UserProfile | null>;
-    /**
-     * / Check if the caller has visited the admin.
-     */
     hasAdminBeenVisited(): Promise<boolean>;
     isCallerAdmin(): Promise<boolean>;
-    /**
-     * / Mark that the admin has been visited by the caller (admin only).
-     */
     markAdminVisited(): Promise<void>;
-    /**
-     * / Register a new user profile. Requires #user role (must be authenticated).
-     */
     registerUser(profile: UserProfile): Promise<void>;
-    /**
-     * / Save the calling user's own profile. Requires #user role.
-     */
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
-    /**
-     * / Submit a test result. Requires #user role.
-     */
-    submitTestResult(testId: bigint, answers: Array<Answer>, score: bigint): Promise<void>;
-    /**
-     * / Toggle publish/unpublish a test. Admin only.
-     */
+    submitTestResult(testId: bigint, answers: Array<Answer>): Promise<void>;
     togglePublishTest(testId: bigint): Promise<void>;
-    /**
-     * / Update the calling user's profile. Requires #user role.
-     */
     updateProfile(profile: UserProfile): Promise<void>;
-    /**
-     * / Update an existing question. Admin only.
-     */
     updateQuestion(questionId: bigint, image: ExternalBlob, correctOption: string): Promise<void>;
-    /**
-     * / Update an existing test. Admin only.
-     */
-    updateTest(testId: bigint, name: string, durationMinutes: bigint, questionIds: Array<bigint>): Promise<void>;
+    updateTest(testId: bigint, name: string, durationMinutes: bigint, questionIds: Array<bigint>, marksPerCorrect: bigint, negativeMarks: bigint): Promise<void>;
 }
 import type { Class as _Class, CompleteTest as _CompleteTest, ExternalBlob as _ExternalBlob, Question as _Question, UserProfile as _UserProfile, UserRole as _UserRole, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
@@ -369,17 +306,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async createTest(arg0: string, arg1: bigint, arg2: Array<bigint>): Promise<bigint> {
+    async createTest(arg0: string, arg1: bigint, arg2: Array<bigint>, arg3: bigint, arg4: bigint): Promise<bigint> {
         if (this.processError) {
             try {
-                const result = await this.actor.createTest(arg0, arg1, arg2);
+                const result = await this.actor.createTest(arg0, arg1, arg2, arg3, arg4);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.createTest(arg0, arg1, arg2);
+            const result = await this.actor.createTest(arg0, arg1, arg2, arg3, arg4);
             return result;
         }
     }
@@ -621,17 +558,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async submitTestResult(arg0: bigint, arg1: Array<Answer>, arg2: bigint): Promise<void> {
+    async submitTestResult(arg0: bigint, arg1: Array<Answer>): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.submitTestResult(arg0, arg1, arg2);
+                const result = await this.actor.submitTestResult(arg0, arg1);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.submitTestResult(arg0, arg1, arg2);
+            const result = await this.actor.submitTestResult(arg0, arg1);
             return result;
         }
     }
@@ -677,17 +614,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async updateTest(arg0: bigint, arg1: string, arg2: bigint, arg3: Array<bigint>): Promise<void> {
+    async updateTest(arg0: bigint, arg1: string, arg2: bigint, arg3: Array<bigint>, arg4: bigint, arg5: bigint): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.updateTest(arg0, arg1, arg2, arg3);
+                const result = await this.actor.updateTest(arg0, arg1, arg2, arg3, arg4, arg5);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.updateTest(arg0, arg1, arg2, arg3);
+            const result = await this.actor.updateTest(arg0, arg1, arg2, arg3, arg4, arg5);
             return result;
         }
     }
@@ -742,20 +679,26 @@ async function from_candid_record_n17(_uploadFile: (file: ExternalBlob) => Promi
     isPublished: boolean;
     name: string;
     durationMinutes: bigint;
+    marksPerCorrect: bigint;
     questions: Array<_Question>;
+    negativeMarks: bigint;
 }): Promise<{
     id: bigint;
     isPublished: boolean;
     name: string;
     durationMinutes: bigint;
+    marksPerCorrect: bigint;
     questions: Array<Question>;
+    negativeMarks: bigint;
 }> {
     return {
         id: value.id,
         isPublished: value.isPublished,
         name: value.name,
         durationMinutes: value.durationMinutes,
-        questions: await from_candid_vec_n11(_uploadFile, _downloadFile, value.questions)
+        marksPerCorrect: value.marksPerCorrect,
+        questions: await from_candid_vec_n11(_uploadFile, _downloadFile, value.questions),
+        negativeMarks: value.negativeMarks
     };
 }
 function from_candid_record_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {

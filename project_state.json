@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 21,
+  "projectStateVersion": 27,
   "summary": "Responsive MHT-CET test series website named 'Concept Delta' with Navy Blue/White minimal theme. Includes Home Page, Dashboard, Test Page, and Admin Panel. Uses Google Login auth with user profile collection. Backend with database for users, tests, questions, and results.",
   "architectural_notes": [
     "Navy Blue primary color, White background, modern minimal UI across all pages",
@@ -11,7 +11,9 @@
   ],
   "known_issues": [
     "Admin button/link not visible on home screen for admin users",
-    "Onboarding form (profile setup modal) background is not solid — needs a solid dark/white background for visibility"
+    "Onboarding form (profile setup modal) background is not solid — needs a solid dark/white background for visibility",
+    "Test submission always shows score as 0 — score calculation is broken",
+    "Post-submission screen on Test Page has a transparent background — needs solid dark/white background for readability"
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -182,6 +184,38 @@
         "REQ-25"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-fix-the-test-score-calculation-bug-in-testpage-tsx-and-the-backend-submittestresult-function-so-that-the-score-correctly-reflects-the-number-of-questions-answered-correctly-in-testpage-tsx-verify-that-the-answers-map-being-sent-to-the-backend-contains-the-user-s-actual-selected-options-keyed-by-question-id-valued-by-selected-answer-a-b-c-d-in-the-backend-submittestresult-function-backend-main-mo-verify-that-the-score-is-computed-by-comparing-each-submitted-answer-against-the-question-s-correctoption-field-iterating-over-all-submitted-answers-looking-up-the-corresponding-question-and-incrementing-the-score-counter-when-they-match-ensure-the-computed-score-is-stored-in-the-testresult-record-and-returned-correctly-fix-any-mismatch-between-the-answer-key-format-used-on-the-frontend-question-index-vs-question-id-and-the-lookup-key-used-in-the-backend",
+      "title": "Fix the test score calculation bug in TestPage.tsx and the backend submitTestResult function so that the score correctly reflects the number of questions answered correctly. In TestPage.tsx, verify that the answers map being sent to the backend contains the user's actual selected options (keyed by question ID, valued by selected answer A/B/C/D). In the backend submitTestResult function (backend/main.mo), verify that the score is computed by comparing each submitted answer against the question's correctOption field — iterating over all submitted answers, looking up the corresponding question, and incrementing the score counter when they match. Ensure the computed score is stored in the TestResult record and returned correctly. Fix any mismatch between the answer key format used on the frontend (question index vs. question ID) and the lookup key used in the backend.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-test-builder-tab-in-the-admin-panel-frontend-src-components-admin-testbuilder-tsx-to-include-two-numeric-input-fields-when-creating-a-test-marks-per-correct-answer-default-value-1-minimum-1-and-negative-marks-per-wrong-answer-default-value-0-minimum-0-both-fields-must-be-validated-positive-integers-only-and-their-values-must-be-passed-to-the-backend-createtest-call-style-both-fields-using-the-existing-navy-blue-0a1f44-and-white-theme-consistent-with-the-other-form-fields-in-testbuilder-tsx",
+      "title": "Update the Test Builder tab in the Admin Panel (frontend/src/components/admin/TestBuilder.tsx) to include two numeric input fields when creating a test: 'Marks per Correct Answer' (default value: 1, minimum: 1) and 'Negative Marks per Wrong Answer' (default value: 0, minimum: 0). Both fields must be validated (positive integers only) and their values must be passed to the backend `createTest` call. Style both fields using the existing Navy Blue (#0A1F44) and White theme consistent with the other form fields in TestBuilder.tsx.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-results-tab-in-the-admin-panel-frontend-src-components-admin-resultstab-tsx-and-the-test-result-page-frontend-src-pages-testresultpage-tsx-to-display-the-marks-based-score-e-g-14-20-marks-in-addition-to-or-instead-of-the-raw-correct-answer-count-fetch-and-display-the-markspercorrect-and-negativemarks-configuration-alongside-the-result-so-that-the-score-is-presented-in-the-context-of-the-marking-scheme",
+      "title": "Update the Results tab in the Admin Panel (frontend/src/components/admin/ResultsTab.tsx) and the Test Result page (frontend/src/pages/TestResultPage.tsx) to display the marks-based score (e.g., '14 / 20 marks') in addition to or instead of the raw correct-answer count. Fetch and display the `marksPerCorrect` and `negativeMarks` configuration alongside the result so that the score is presented in the context of the marking scheme.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-testpage-tsx-fix-the-submit-test-confirmation-dialog-modal-so-that-its-overlay-uses-a-solid-dark-background-e-g-rgba-0-0-0-0-85-or-bg-gray-900-and-the-dialog-card-itself-uses-a-solid-white-background-ffffff-with-navy-0a1f44-text-the-dialog-currently-renders-with-a-transparent-or-semi-transparent-background-causing-the-underlying-question-content-to-show-through-and-making-the-confirmation-text-submit-test-you-have-answered-x-out-of-y-questions-the-submit-now-button-and-the-continue-test-button-unreadable-remove-all-transparent-or-translucent-background-styles-from-the-confirmation-dialog-overlay-and-card",
+      "title": "In TestPage.tsx, fix the 'Submit Test?' confirmation dialog/modal so that its overlay uses a solid dark background (e.g. rgba(0,0,0,0.85) or bg-gray-900) and the dialog card itself uses a solid white background (#FFFFFF) with navy (#0A1F44) text. The dialog currently renders with a transparent or semi-transparent background, causing the underlying question content to show through and making the confirmation text ('Submit Test?', 'You have answered X out of Y questions...'), the 'Submit Now' button, and the 'Continue Test' button unreadable. Remove all transparent or translucent background styles from the confirmation dialog overlay and card.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -262,6 +296,32 @@
     {
       "id": "AR-17",
       "summary": "Onboarding/profile setup modal (Name, Class, Contact Number): use a solid dark/white background (not transparent) so it is clearly visible",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Fix bug: test submission always shows score as 0 instead of the correct calculated score",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Test Builder: add marks/scoring options when creating a test (e.g., marks per correct answer, negative marking) so that results are calculated using those marks",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Update the backend Test data model in backend/main.mo to add scoring configuration fields to each Test record: `marksPerCorrect: Int` (marks awarded for each correct answer, default 1) and `negativeMarks: Int` (marks deducted for each wrong answer, default 0, stored as a non-negative integer representing the deduction amount). Update the `createTest` and `updateTest` functions to accept these new fields. Update the `submitTestResult` function to calculate the score using these per-test marks values: for each submitted answer, add `marksPerCorrect` if correct, subtract `negativeMarks` if incorrect (and the question was answered). Store the final computed marks-based score in the TestResult record.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Fix post-submission screen background on Test Page: make the background solid dark/white (not transparent) so the score and message are clearly visible",
       "reqIds": [],
       "status": "pending"
     }

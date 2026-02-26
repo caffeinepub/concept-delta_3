@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-26T09:53:03.116Z",
+  "generatedAt": "2026-02-26T10:42:00.654Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -11,14 +11,14 @@
     "implemented": 1,
     "items": [
       {
-        "id": "REQ-25",
-        "summary": "Update ProfileSetupModal.tsx so the modal overlay uses a solid dark background (e.g. rgba(0,0,0,0.85) or bg-gray-900) and the modal card itself uses a solid white background (#FFFFFF) with navy (#0A1F44) text. Remove any semi-transparent or translucent background styles that cause the underlying page content to show through the modal, making the form fields and labels unreadable.",
+        "id": "REQ-30",
+        "summary": "In TestPage.tsx, fix the 'Submit Test?' confirmation dialog/modal so that its overlay uses a solid dark background (e.g. rgba(0,0,0,0.85) or bg-gray-900) and the dialog card itself uses a solid white background (#FFFFFF) with navy (#0A1F44) text. The dialog currently renders with a transparent or semi-transparent background, causing the underlying question content to show through and making the confirmation text ('Submit Test?', 'You have answered X out of Y questions...'), the 'Submit Now' button, and the 'Continue Test' button unreadable. Remove all transparent or translucent background styles from the confirmation dialog overlay and card.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/ProfileSetupModal.tsx"
+          "frontend/src/pages/TestPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/ProfileSetupModal.tsx"
+          "frontend/src/pages/TestPage.tsx"
         ]
       }
     ]
@@ -28,7 +28,7 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/ProfileSetupModal.tsx",
+    "frontend/src/pages/TestPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

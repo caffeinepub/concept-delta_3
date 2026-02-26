@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-profilesetupmodal-tsx-so-the-modal-overlay-uses-a-solid-dark-background-e-g-rgba-0-0-0-0-85-or-bg-gray-900-and-the-modal-card-itself-uses-a-solid-white-background-ffffff-with-navy-0a1f44-text-remove-any-semi-transparent-or-translucent-background-styles-that-cause-the-underlying-page-content-to-show-through-the-modal-making-the-form-fields-and-labels-unreadable",
-      "featureTitle": "Update ProfileSetupModal.tsx so the modal overlay uses a solid dark background (e.g. rgba(0,0,0,0.85) or bg-gray-900) and the modal card itself uses a solid white background (#FFFFFF) with navy (#0A1F44) text. Remove any semi-transparent or translucent background styles that cause the underlying page content to show through the modal, making the form fields and labels unreadable.",
+      "featureId": "feature-in-testpage-tsx-fix-the-submit-test-confirmation-dialog-modal-so-that-its-overlay-uses-a-solid-dark-background-e-g-rgba-0-0-0-0-85-or-bg-gray-900-and-the-dialog-card-itself-uses-a-solid-white-background-ffffff-with-navy-0a1f44-text-the-dialog-currently-renders-with-a-transparent-or-semi-transparent-background-causing-the-underlying-question-content-to-show-through-and-making-the-confirmation-text-submit-test-you-have-answered-x-out-of-y-questions-the-submit-now-button-and-the-continue-test-button-unreadable-remove-all-transparent-or-translucent-background-styles-from-the-confirmation-dialog-overlay-and-card",
+      "featureTitle": "In TestPage.tsx, fix the 'Submit Test?' confirmation dialog/modal so that its overlay uses a solid dark background (e.g. rgba(0,0,0,0.85) or bg-gray-900) and the dialog card itself uses a solid white background (#FFFFFF) with navy (#0A1F44) text. The dialog currently renders with a transparent or semi-transparent background, causing the underlying question content to show through and making the confirmation text ('Submit Test?', 'You have answered X out of Y questions...'), the 'Submit Now' button, and the 'Continue Test' button unreadable. Remove all transparent or translucent background styles from the confirmation dialog overlay and card.",
       "files": [
-        "frontend/src/components/ProfileSetupModal.tsx"
+        "frontend/src/pages/TestPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -17,7 +17,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-25"
+        "REQ-30"
       ],
       "confidence": "high"
     }

@@ -4,7 +4,7 @@ import ProtectedRoute from '../components/ProtectedRoute';
 import Navbar from '../components/Navbar';
 import { Button } from '@/components/ui/button';
 import { SiTelegram } from 'react-icons/si';
-import { Trophy, LayoutDashboard } from 'lucide-react';
+import { Trophy, LayoutDashboard, CheckCircle2, XCircle, MinusCircle } from 'lucide-react';
 
 function TestResultContent() {
   const { testId } = useParams({ from: '/test/$testId/result' });
@@ -16,15 +16,25 @@ function TestResultContent() {
     ?.filter((r) => r.testId.toString() === testId)
     .sort((a, b) => Number(b.submittedAt - a.submittedAt))[0];
 
-  const score = latestResult ? Number(latestResult.score) : 0;
-  const total = test?.questions.length ?? 0;
-  const pct = total > 0 ? Math.round((score / total) * 100) : 0;
+  const correctCount = latestResult ? Number(latestResult.score) : 0;
+  const marks = latestResult ? Number(latestResult.marks) : 0;
+  const totalQuestions = test?.questions.length ?? 0;
+  const marksPerCorrect = test ? Number(test.marksPerCorrect) : 1;
+  const negativeMarks = test ? Number(test.negativeMarks) : 0;
+  const maxMarks = totalQuestions * marksPerCorrect;
+
+  const answeredCount = latestResult?.answers.length ?? 0;
+  const wrongCount = answeredCount - correctCount;
+  const skippedCount = totalQuestions - answeredCount;
+
+  const pct = maxMarks > 0 ? Math.round((marks / maxMarks) * 100) : 0;
+  const clampedPct = Math.max(0, Math.min(100, pct));
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
       <main className="flex-1 flex items-center justify-center px-4 py-12">
-        <div className="max-w-md w-full text-center">
+        <div className="max-w-lg w-full text-center">
           <div className="w-24 h-24 rounded-full bg-[#0A1F44]/5 border-4 border-[#0A1F44] flex items-center justify-center mx-auto mb-6">
             <Trophy className="w-10 h-10 text-[#0A1F44]" />
           </div>
@@ -33,17 +43,68 @@ function TestResultContent() {
             Test Complete!
           </h1>
 
+          {test?.name && (
+            <p className="text-sm text-gray-400 mb-4 font-medium">{test.name}</p>
+          )}
+
           {resultsLoading ? (
-            <p className="text-gray-400">Loading your results...</p>
+            <p className="text-gray-400 mb-8">Loading your results...</p>
           ) : (
             <>
-              <p className="text-4xl font-heading font-bold text-[#0A1F44] mb-1">{pct}%</p>
-              <p className="text-gray-500 mb-2">
-                Score: <span className="font-bold text-[#0A1F44]">{score}</span> / {total}
-              </p>
-              <p className="text-sm text-gray-400 mb-8">
-                {test?.name && <span className="font-medium text-[#0A1F44]">{test.name}</span>}
-              </p>
+              {/* Main Score Display */}
+              <div className="bg-[#0A1F44] rounded-2xl p-6 mb-5 text-white">
+                <p className="text-sm font-medium text-white/70 mb-1">Your Score</p>
+                <p className="text-5xl font-heading font-bold mb-1">
+                  {marks}
+                  <span className="text-2xl font-normal text-white/60"> / {maxMarks}</span>
+                </p>
+                <p className="text-white/70 text-sm">marks</p>
+                <div className="mt-3 bg-white/10 rounded-full h-2 overflow-hidden">
+                  <div
+                    className="h-full bg-white rounded-full transition-all"
+                    style={{ width: `${clampedPct}%` }}
+                  />
+                </div>
+                <p className="text-white/80 text-sm mt-2 font-semibold">{clampedPct}%</p>
+              </div>
+
+              {/* Answer Breakdown */}
+              <div className="grid grid-cols-3 gap-3 mb-5">
+                <div className="bg-green-50 border border-green-100 rounded-xl p-3">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 mx-auto mb-1" />
+                  <p className="text-xl font-bold text-green-700">{correctCount}</p>
+                  <p className="text-xs text-green-600">Correct</p>
+                </div>
+                <div className="bg-red-50 border border-red-100 rounded-xl p-3">
+                  <XCircle className="w-5 h-5 text-red-500 mx-auto mb-1" />
+                  <p className="text-xl font-bold text-red-600">{wrongCount}</p>
+                  <p className="text-xs text-red-500">Wrong</p>
+                </div>
+                <div className="bg-gray-50 border border-gray-100 rounded-xl p-3">
+                  <MinusCircle className="w-5 h-5 text-gray-400 mx-auto mb-1" />
+                  <p className="text-xl font-bold text-gray-500">{skippedCount}</p>
+                  <p className="text-xs text-gray-400">Skipped</p>
+                </div>
+              </div>
+
+              {/* Marking Scheme */}
+              <div className="bg-[#0A1F44]/4 border border-[#0A1F44]/10 rounded-xl p-4 mb-5 text-left">
+                <p className="text-[#0A1F44] font-semibold text-sm mb-2">📋 Marking Scheme</p>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500">Correct answer</span>
+                  <span className="font-semibold text-green-700">+{marksPerCorrect} mark{marksPerCorrect !== 1 ? 's' : ''}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm mt-1">
+                  <span className="text-gray-500">Wrong answer</span>
+                  <span className={`font-semibold ${negativeMarks > 0 ? 'text-red-600' : 'text-gray-400'}`}>
+                    {negativeMarks > 0 ? `−${negativeMarks} mark${negativeMarks !== 1 ? 's' : ''}` : 'No penalty'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-sm mt-1">
+                  <span className="text-gray-500">Skipped</span>
+                  <span className="font-semibold text-gray-400">0 marks</span>
+                </div>
+              </div>
             </>
           )}
 

@@ -1,14 +1,14 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-26T09:53:03.113Z",
-  "summary": "The diff modifies ProfileSetupModal.tsx to use a fully opaque dark overlay (rgba(0,0,0,0.88)) and a solid white (#ffffff) card with navy (#0A1F44) text, directly addressing REQ-25. The implementation aligns well with all acceptance criteria.",
+  "generatedAt": "2026-02-26T10:42:00.651Z",
+  "summary": "REQ-30 is fully implemented. The diff shows TestPage.tsx was modified to replace the previous dialog implementation with a custom SubmitConfirmDialog component using solid inline styles: rgba(0,0,0,0.85) dark overlay, solid white (#ffffff) card background, navy (#0A1F44) text for title and buttons, and solid navy background with white text for the 'Submit Now' button. The 'Continue Test' button and responsive layout are also addressed. No hallucinated features were identified.",
   "missing_requirements": [],
   "hallucinated_features": [],
-  "confidence": 0.95,
+  "confidence": 0.97,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/components/ProfileSetupModal.tsx",
+    "frontend/src/pages/TestPage.tsx",
     "project_state.json"
   ]
 }
