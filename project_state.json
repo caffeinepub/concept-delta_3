@@ -1,0 +1,194 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 11,
+  "summary": "Responsive MHT-CET test series website named 'Concept Delta' with Navy Blue/White minimal theme. Includes Home Page, Dashboard, Test Page, and Admin Panel. Uses Google Login auth with user profile collection. Backend with database for users, tests, questions, and results.",
+  "architectural_notes": [
+    "Navy Blue primary color, White background, modern minimal UI across all pages",
+    "Google OAuth for authentication; post-login profile collection (name, class, contact)",
+    "Simple backend with database (MVP structure); mobile-responsive design required",
+    "Admin panel protected route — accessible only to admin users",
+    "Questions stored as uploaded images; tests composed by selecting from question gallery"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-design-and-apply-a-consistent-navy-blue-0a1f44-and-white-visual-theme-across-all-pages-with-modern-minimal-ui-clean-sans-serif-typography-generous-whitespace-and-fully-mobile-responsive-layouts-using-tailwind-css",
+      "title": "Design and apply a consistent Navy Blue (#0A1F44) and White visual theme across all pages with modern minimal UI, clean sans-serif typography, generous whitespace, and fully mobile-responsive layouts using Tailwind CSS.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-home-page-with-1-a-navbar-containing-a-triangular-delta-logo-and-concept-delta-brand-name-on-the-left-and-an-internet-identity-login-button-on-the-top-right-2-a-hero-section-with-heading-free-mht-cet-mock-tests-subheading-created-by-coepians-coep-technological-university-one-of-the-top-engineering-colleges-in-maharashtra-and-student-focused-copy-about-smart-practice-and-free-mock-tests-3-a-large-cta-button-start-practicing-now-4-a-telegram-button-linking-to-https-t-me-conceptdelta-labeled-short-notes-free-test-series-5-a-youtube-button-linking-to-https-youtube-com-conceptdelta2026-labeled-more-guidance-on-youtube",
+      "title": "Build the Home Page with: (1) a Navbar containing a triangular delta logo and 'Concept Delta' brand name on the left, and an Internet Identity login button on the top right; (2) a hero section with heading 'Free MHT-CET Mock Tests', subheading 'Created by COEPians – COEP Technological University, one of the top engineering colleges in Maharashtra', and student-focused copy about smart practice and free mock tests; (3) a large CTA button 'Start Practicing Now'; (4) a Telegram button linking to https://t.me/Conceptdelta labeled 'Short Notes & Free Test Series'; (5) a YouTube button linking to https://youtube.com/@conceptdelta2026 labeled 'More Guidance on YouTube'.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-internet-identity-authentication-after-a-user-logs-in-for-the-first-time-show-a-profile-completion-form-asking-for-full-name-text-class-dropdown-11th-12th-dropper-and-contact-number-numeric-on-submission-save-the-profile-to-the-backend-and-redirect-to-the-dashboard",
+      "title": "Implement Internet Identity authentication. After a user logs in for the first time, show a profile completion form asking for: Full Name (text), Class (dropdown: 11th / 12th / Dropper), and Contact Number (numeric). On submission, save the profile to the backend and redirect to the Dashboard.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-dashboard-page-authenticated-users-only-that-fetches-and-displays-all-published-tests-as-cards-each-card-must-show-test-name-duration-in-minutes-and-a-start-test-button-that-navigates-to-the-test-page-for-that-test",
+      "title": "Build the Dashboard page (authenticated users only) that fetches and displays all published tests as cards. Each card must show: Test Name, Duration (in minutes), and a 'Start Test' button that navigates to the Test Page for that test.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-test-page-fetch-the-test-and-its-questions-by-test-id-from-the-url-display-1-a-top-bar-with-a-countdown-timer-from-test-duration-and-a-submit-test-button-2-one-question-at-a-time-showing-the-question-options-image-filling-the-full-viewport-width-max-height-constrained-so-the-image-is-always-fully-visible-on-mobile-and-desktop-without-scrolling-when-possible-3-four-clickable-answer-buttons-labeled-a-b-c-d-below-the-image-for-the-current-question-4-navigation-to-move-between-questions-5-auto-submit-when-the-timer-reaches-zero-6-a-post-submission-screen-showing-the-score-and-a-message-join-our-telegram-for-detailed-explanations-https-t-me-conceptdelta",
+      "title": "Build the Test Page. Fetch the test and its questions by test ID from the URL. Display: (1) a top bar with a countdown timer (from test duration) and a 'Submit Test' button; (2) one question at a time showing the question+options image filling the full viewport width (max-height constrained so the image is always fully visible on mobile and desktop without scrolling when possible); (3) four clickable answer buttons labeled A, B, C, D below the image for the current question; (4) navigation to move between questions; (5) auto-submit when the timer reaches zero; (6) a post-submission screen showing the score and a message: 'Join our Telegram for detailed explanations: https://t.me/Conceptdelta'.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-admin-panel-page-accessible-only-to-users-with-isadmin-true-include-four-tabs-or-sections-1-question-gallery-upload-question-options-image-from-device-gallery-select-correct-answer-a-b-c-d-save-question-display-all-saved-questions-as-a-grid-with-their-correct-answer-badge-2-test-builder-create-a-new-test-by-entering-a-name-and-duration-then-selecting-questions-from-the-question-gallery-save-the-test-3-test-management-list-all-tests-with-a-publish-unpublish-toggle-switch-4-users-display-a-table-of-all-registered-users-with-columns-name-email-principal-class-contact-5-results-display-a-table-of-all-test-results-with-columns-username-test-name-score",
+      "title": "Build the Admin Panel page, accessible only to users with isAdmin = true. Include four tabs or sections: (1) Question Gallery – upload question+options image from device gallery, select correct answer (A/B/C/D), save question; display all saved questions as a grid with their correct answer badge; (2) Test Builder – create a new test by entering a name and duration, then selecting questions from the question gallery; save the test; (3) Test Management – list all tests with a publish/unpublish toggle switch; (4) Users – display a table of all registered users with columns: Name, Email (principal), Class, Contact; (5) Results – display a table of all test results with columns: Username, Test Name, Score.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-client-side-routing-with-protected-routes-home-public-dashboard-authenticated-users-test-testid-authenticated-users-admin-admin-only-redirect-unauthenticated-users-to-and-non-admin-users-away-from-admin",
+      "title": "Implement client-side routing with protected routes: '/' (Home, public), '/dashboard' (authenticated users), '/test/:testId' (authenticated users), '/admin' (admin only). Redirect unauthenticated users to '/' and non-admin users away from '/admin'.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-and-update-the-home-page-homepage-tsx-to-strictly-apply-the-navy-blue-0a1f44-and-white-theme-use-0a1f44-as-the-primary-background-for-the-navbar-and-hero-section-white-for-body-card-backgrounds-white-or-light-grey-text-on-dark-navy-surfaces-and-navy-text-on-white-surfaces-ensure-all-buttons-cta-telegram-youtube-use-the-navy-white-palette-with-clean-hover-states-remove-any-off-theme-accent-colors",
+      "title": "Audit and update the Home Page (HomePage.tsx) to strictly apply the Navy Blue (#0A1F44) and White theme: use #0A1F44 as the primary background for the navbar and hero section, white for body/card backgrounds, white or light-grey text on dark navy surfaces, and navy text on white surfaces. Ensure all buttons (CTA, Telegram, YouTube) use the navy/white palette with clean hover states. Remove any off-theme accent colors.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-and-update-the-dashboard-page-dashboardpage-tsx-and-testcard-component-testcard-tsx-to-strictly-apply-the-navy-blue-0a1f44-and-white-minimal-theme-white-page-background-navy-headings-and-labels-test-cards-with-white-background-and-a-subtle-navy-border-or-shadow-and-the-start-test-button-in-solid-0a1f44-with-white-text-loading-skeletons-should-use-light-grey-tones-consistent-with-the-palette",
+      "title": "Audit and update the Dashboard page (DashboardPage.tsx) and TestCard component (TestCard.tsx) to strictly apply the Navy Blue (#0A1F44) and White minimal theme: white page background, navy headings and labels, test cards with white background and a subtle navy border or shadow, and the 'Start Test' button in solid #0A1F44 with white text. Loading skeletons should use light-grey tones consistent with the palette.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-and-update-the-admin-panel-page-adminpage-tsx-and-all-its-sub-components-questiongallery-tsx-testbuilder-tsx-testmanagement-tsx-userstab-tsx-resultstab-tsx-to-strictly-apply-the-navy-blue-0a1f44-and-white-minimal-theme-white-page-card-backgrounds-navy-tab-labels-active-tab-highlighted-with-solid-navy-background-and-white-text-navy-table-headers-and-all-action-buttons-upload-save-toggle-delete-using-the-navy-white-palette",
+      "title": "Audit and update the Admin Panel page (AdminPage.tsx) and all its sub-components (QuestionGallery.tsx, TestBuilder.tsx, TestManagement.tsx, UsersTab.tsx, ResultsTab.tsx) to strictly apply the Navy Blue (#0A1F44) and White minimal theme: white page/card backgrounds, navy tab labels (active tab highlighted with solid navy background and white text), navy table headers, and all action buttons (upload, save, toggle, delete) using the navy/white palette.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-navbar-navbar-tsx-is-consistent-across-all-pages-home-dashboard-and-admin-with-a-sticky-0a1f44-background-white-concept-delta-brand-text-and-delta-logo-white-nav-links-dashboard-admin-and-a-white-outlined-internet-identity-login-logout-button-mobile-hamburger-menu-should-also-follow-the-navy-white-palette",
+      "title": "Ensure the Navbar (Navbar.tsx) is consistent across all pages — Home, Dashboard, and Admin — with a sticky #0A1F44 background, white 'Concept Delta' brand text and delta logo, white nav links (Dashboard, Admin), and a white-outlined Internet Identity login/logout button. Mobile hamburger menu should also follow the navy/white palette.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-home-page-homepage-tsx-hero-section-and-navbar-to-match-the-following-spec-exactly-1-navbar-triangular-delta-logo-concept-delta-brand-name-on-the-left-internet-identity-login-button-on-the-top-right-no-google-login-the-platform-uses-internet-identity-2-hero-heading-free-mht-cet-mock-tests-3-hero-subheading-created-by-coepians-coep-technological-university-one-of-the-top-engineering-colleges-in-maharashtra-4-student-focused-body-copy-highlighting-smart-practice-free-mock-tests-and-exam-readiness-5-large-cta-button-labeled-start-practicing-now-that-navigates-to-the-dashboard-6-a-telegram-button-labeled-short-notes-free-test-series-linking-to-https-t-me-conceptdelta-7-a-youtube-button-labeled-more-guidance-on-youtube-linking-to-https-youtube-com-conceptdelta2026-all-elements-must-use-the-existing-navy-blue-0a1f44-and-white-theme",
+      "title": "Update the Home Page (HomePage.tsx) hero section and navbar to match the following spec exactly: (1) Navbar: triangular delta logo + 'Concept Delta' brand name on the left, Internet Identity login button on the top right (no Google Login — the platform uses Internet Identity); (2) Hero heading: 'Free MHT-CET Mock Tests'; (3) Hero subheading: 'Created by COEPians – COEP Technological University, one of the top engineering colleges in Maharashtra'; (4) Student-focused body copy highlighting smart practice, free mock tests, and exam readiness; (5) Large CTA button labeled 'Start Practicing Now' that navigates to the dashboard; (6) A Telegram button labeled 'Short Notes & Free Test Series' linking to https://t.me/Conceptdelta; (7) A YouTube button labeled 'More Guidance on YouTube' linking to https://youtube.com/@conceptdelta2026. All elements must use the existing Navy Blue (#0A1F44) and White theme.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-test-page-frontend-src-pages-testpage-tsx-fetch-the-test-and-its-questions-by-test-id-from-the-url-display-a-top-bar-with-a-countdown-timer-counting-down-from-the-test-duration-in-minutes-and-a-submit-test-button-show-one-question-at-a-time-as-a-question-options-image-that-fills-the-full-viewport-width-with-a-max-height-constraint-so-the-image-is-always-fully-visible-on-both-mobile-and-desktop-without-scrolling-when-possible-render-four-clickable-answer-buttons-labeled-a-b-c-d-below-the-image-for-the-current-question-include-previous-next-navigation-to-move-between-questions-auto-submit-when-the-timer-reaches-zero-after-submission-show-a-post-submission-screen-displaying-the-score-and-the-message-join-our-telegram-for-detailed-explanations-https-t-me-conceptdelta-all-ui-must-use-the-navy-blue-0a1f44-and-white-theme",
+      "title": "Build the Test Page (frontend/src/pages/TestPage.tsx): fetch the test and its questions by test ID from the URL. Display a top bar with a countdown timer (counting down from the test duration in minutes) and a 'Submit Test' button. Show one question at a time as a question+options image that fills the full viewport width with a max-height constraint so the image is always fully visible on both mobile and desktop without scrolling when possible. Render four clickable answer buttons labeled A, B, C, D below the image for the current question. Include previous/next navigation to move between questions. Auto-submit when the timer reaches zero. After submission, show a post-submission screen displaying the score and the message: 'Join our Telegram for detailed explanations: https://t.me/Conceptdelta'. All UI must use the Navy Blue (#0A1F44) and White theme.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-admin-panel-access-flow-in-the-frontend-so-that-the-admin-route-and-the-adminpage-are-only-accessible-on-the-user-s-first-visit-to-the-admin-panel-after-the-admin-successfully-loads-the-admin-page-for-the-first-time-call-markadminvisited-on-the-backend-on-any-subsequent-navigation-to-admin-if-hasadminbeenvisited-returns-true-redirect-the-user-to-the-dashboard-dashboard-with-a-toast-or-inline-message-explaining-that-the-admin-panel-is-only-accessible-on-first-login",
+      "title": "Update the Admin Panel access flow in the frontend so that the `/admin` route and the AdminPage are only accessible on the user's **first** visit to the admin panel. After the admin successfully loads the admin page for the first time, call `markAdminVisited()` on the backend. On any subsequent navigation to `/admin`, if `hasAdminBeenVisited()` returns `true`, redirect the user to the dashboard (`/dashboard`) with a toast or inline message explaining that the admin panel is only accessible on first login.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Home Page: Navbar with triangular logo, Google Login button, hero heading/subheading, CTA button, Telegram and YouTube links",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Auth Flow: Google Login, post-login profile form (Full Name, Class, Contact), save user data to database",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Dashboard: Show published test cards with test name, duration, and Start Test button",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Test Page: Full-screen question+options image, clickable A/B/C/D answer buttons, top timer, submit button, auto-submit on timeout, post-submission Telegram message",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Admin Panel (admin-only): Upload question+options images, select correct option, manage question gallery, create tests from questions, publish toggle, view user list, view test results",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Build the backend data model with stable storage for: Users (principal, fullName, class, contactNumber, email, isAdmin), Questions (id, imageUrl, correctOption), Tests (id, name, durationMinutes, questionIds, isPublished), and TestResults (userId, testId, score, answers, submittedAt).",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Implement backend query and update functions: registerUser, getMyProfile, updateProfile, getPublishedTests, getTestById, submitTestResult, getMyResults (for users); and addQuestion, updateQuestion, deleteQuestion, getAllQuestions, createTest, updateTest, togglePublish, getAllUsers, getAllResults (for admin, guarded by isAdmin check).",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Admin panel should only be shown/accessible on first login (or first time accessing admin route)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "In the backend, add a field `hasVisitedAdmin: Bool` (default `false`) to the User record. Expose a new update function `markAdminVisited()` that sets this flag to `true` for the calling principal (admin-only guard). Expose a query `hasAdminBeenVisited() : async Bool` that returns the current value for the caller.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Concept Delta",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

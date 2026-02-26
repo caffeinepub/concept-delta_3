@@ -1,0 +1,63 @@
+{
+  "kind": "build_request",
+  "title": "Admin Panel: First-Login-Only Access Gate",
+  "projectName": "Concept Delta",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-16",
+      "text": "In the backend, add a field `hasVisitedAdmin: Bool` (default `false`) to the User record. Expose a new update function `markAdminVisited()` that sets this flag to `true` for the calling principal (admin-only guard). Expose a query `hasAdminBeenVisited() : async Bool` that returns the current value for the caller.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "create admin panel structure and admin page show only 1st login"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User record in stable storage includes a `hasVisitedAdmin` boolean field defaulting to false.",
+        "`markAdminVisited()` sets `hasVisitedAdmin = true` for the calling admin principal.",
+        "`hasAdminBeenVisited()` returns the correct boolean value for the caller.",
+        "Both functions are guarded so only users with `isAdmin = true` can call them."
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "text": "Update the Admin Panel access flow in the frontend so that the `/admin` route and the AdminPage are only accessible on the user's **first** visit to the admin panel. After the admin successfully loads the admin page for the first time, call `markAdminVisited()` on the backend. On any subsequent navigation to `/admin`, if `hasAdminBeenVisited()` returns `true`, redirect the user to the dashboard (`/dashboard`) with a toast or inline message explaining that the admin panel is only accessible on first login.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "admin page show only 1st login"
+        ]
+      },
+      "acceptanceCriteria": [
+        "On first login/first visit to `/admin`, the admin page renders normally and `markAdminVisited()` is called.",
+        "On all subsequent visits to `/admin` (i.e., `hasAdminBeenVisited()` returns true), the user is redirected to `/dashboard`.",
+        "A clear message (toast or inline notice) informs the admin that the panel is only accessible on first login.",
+        "Non-admin users are still redirected away from `/admin` as before.",
+        "Unauthenticated users are still redirected to `/` as before.",
+        "The AdminRoute.tsx guard component is updated (or a wrapper is added) to implement this first-visit check without modifying immutable paths."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui.",
+    "All backend changes must remain within the single main actor in backend/main.mo.",
+    "The existing admin role check (isAdmin = true) must remain in place alongside the new first-visit gate."
+  ],
+  "nonGoals": [
+    "Rebuilding or redesigning the Admin Panel tabs or sub-components.",
+    "Changing the visual theme or layout of any existing page.",
+    "Adding a time-based expiry or session-based admin access control.",
+    "Resetting the first-visit flag or providing an admin reset mechanism."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

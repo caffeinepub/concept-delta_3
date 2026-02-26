@@ -1,0 +1,36 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Admin Panel: First-Login-Only Access Gate",
+  "requirements": [
+    {
+      "id": "REQ-17",
+      "summary": "Implement first-visit-only access to the Admin Panel with automatic redirection after initial visit",
+      "acceptanceCriteria": [
+        "On first login/first visit to `/admin`, the admin page renders normally and `markAdminVisited()` is called.",
+        "On all subsequent visits to `/admin` (i.e., `hasAdminBeenVisited()` returns true), the user is redirected to `/dashboard`.",
+        "A clear message (toast or inline notice) informs the admin that the panel is only accessible on first login.",
+        "Non-admin users are still redirected away from `/admin` as before.",
+        "Unauthenticated users are still redirected to `/` as before.",
+        "The AdminRoute.tsx guard component is updated (or a wrapper is added) to implement this first-visit check without modifying immutable paths."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AdminRoute.tsx",
+          "operation": "modify",
+          "description": "Add first-visit check to the admin route guard. After verifying admin status, check if `hasAdminBeenVisited()` returns true. If true, redirect to `/dashboard` and show a toast message explaining the admin panel is only accessible on first login. If false (first visit), allow access and proceed to render children normally. Maintain existing authentication and admin role checks."
+        },
+        {
+          "path": "frontend/src/pages/AdminPage.tsx",
+          "operation": "modify",
+          "description": "Add an effect hook that calls `markAdminVisited()` when the AdminPage successfully mounts for an admin user who has not yet visited. Use the actor from useActor hook and call the backend method to mark the visit. Ensure this only fires once on the initial render. Add error handling for the backend call."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add two new query/mutation hooks: `useHasAdminBeenVisited()` to fetch the current visited status from the backend via `hasAdminBeenVisited()`, and `useMarkAdminVisited()` as a mutation hook to call `markAdminVisited()` on the backend. Both hooks should depend on the actor being available and handle loading/error states appropriately."
+        }
+      ]
+    }
+  ]
+}

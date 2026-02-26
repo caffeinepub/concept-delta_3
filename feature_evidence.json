@@ -1,0 +1,27 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-update-the-admin-panel-access-flow-in-the-frontend-so-that-the-admin-route-and-the-adminpage-are-only-accessible-on-the-user-s-first-visit-to-the-admin-panel-after-the-admin-successfully-loads-the-admin-page-for-the-first-time-call-markadminvisited-on-the-backend-on-any-subsequent-navigation-to-admin-if-hasadminbeenvisited-returns-true-redirect-the-user-to-the-dashboard-dashboard-with-a-toast-or-inline-message-explaining-that-the-admin-panel-is-only-accessible-on-first-login",
+      "featureTitle": "Update the Admin Panel access flow in the frontend so that the `/admin` route and the AdminPage are only accessible on the user's **first** visit to the admin panel. After the admin successfully loads the admin page for the first time, call `markAdminVisited()` on the backend. On any subsequent navigation to `/admin`, if `hasAdminBeenVisited()` returns `true`, redirect the user to the dashboard (`/dashboard`) with a toast or inline message explaining that the admin panel is only accessible on first login.",
+      "files": [
+        "frontend/src/components/AdminRoute.tsx",
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/AdminPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-17"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
